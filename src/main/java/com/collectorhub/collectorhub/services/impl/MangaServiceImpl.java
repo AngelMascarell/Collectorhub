@@ -77,8 +77,6 @@ public class MangaServiceImpl implements MangaService {
         return mangaDtoMapper.fromMangaEntityToMangaDto(savedMangaEntity);
     }
 
-
-
     @Override
     public MangaDto getMangaById(UUID id) {
         Optional<MangaEntity> mangaOptional = mangaRepository.findById(id);

@@ -1,5 +1,7 @@
 package com.collectorhub.collectorhub.dto.mappers;
 
+import com.collectorhub.collectorhub.controller.request.GenreRequest;
+import com.collectorhub.collectorhub.controller.response.GenreResponse;
 import com.collectorhub.collectorhub.database.entities.GenreEntity;
 import com.collectorhub.collectorhub.database.entities.MangaEntity;
 import com.collectorhub.collectorhub.dto.GenreDto;
@@ -14,4 +16,8 @@ public interface AbstractGenreDtoMapper {
     GenreDto fromGenreEntityToGenreDto(GenreEntity genreEntity);
 
     List<GenreDto> fromGenreEntityListToGenreDtoList(List<GenreEntity> genreEntityList);
+
+    GenreResponse fromGenreDtoToGenreResponse(GenreDto dto);
+
+    GenreDto fromGenreRequestToGenreDto(GenreRequest request);
 }

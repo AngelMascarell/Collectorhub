@@ -27,7 +27,6 @@ public class MangaController {
 
     @PostMapping
     public ResponseEntity<MangaResponse> createManga(@Valid @RequestBody MangaRequest mangaRequest) {
-        log.info("Received MangaRequest: {}", mangaRequest);
         MangaResponse createdManga = mangaDtoMapper.fromMangaDtotoMangaResponse(mangaService.createManga(mangaDtoMapper.fromMangaRequestToMangaDto(mangaRequest)));
         return new ResponseEntity<>(createdManga, HttpStatus.CREATED);
     }
