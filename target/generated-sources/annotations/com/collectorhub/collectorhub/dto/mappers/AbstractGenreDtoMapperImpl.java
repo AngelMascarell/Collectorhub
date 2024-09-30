@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-05-30T11:59:13+0200",
+    date = "2024-09-30T12:59:29+0200",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.10 (Oracle Corporation)"
 )
 @Component
@@ -67,9 +67,22 @@ public class AbstractGenreDtoMapperImpl implements AbstractGenreDtoMapper {
 
         GenreDto.GenreDtoBuilder genreDto = GenreDto.builder();
 
-        genreDto.id( request.getId() );
         genreDto.name( request.getName() );
 
         return genreDto.build();
+    }
+
+    @Override
+    public List<GenreResponse> fromGenreDtoListToGenreResponseList(List<GenreDto> genreDtoList) {
+        if ( genreDtoList == null ) {
+            return null;
+        }
+
+        List<GenreResponse> list = new ArrayList<GenreResponse>( genreDtoList.size() );
+        for ( GenreDto genreDto : genreDtoList ) {
+            list.add( fromGenreDtoToGenreResponse( genreDto ) );
+        }
+
+        return list;
     }
 }

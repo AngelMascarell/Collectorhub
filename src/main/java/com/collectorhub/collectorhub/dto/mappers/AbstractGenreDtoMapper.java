@@ -20,4 +20,6 @@ public interface AbstractGenreDtoMapper {
     GenreResponse fromGenreDtoToGenreResponse(GenreDto dto);
 
     GenreDto fromGenreRequestToGenreDto(GenreRequest request);
+
+    List<GenreResponse> fromGenreDtoListToGenreResponseList(List<GenreDto> genreDtoList);
 }

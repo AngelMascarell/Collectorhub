@@ -1,6 +1,5 @@
 package com.collectorhub.collectorhub.database.repositories;
 
-import com.collectorhub.collectorhub.database.entities.MangaEntity;
 import com.collectorhub.collectorhub.database.entities.RateEntity;
 import com.collectorhub.collectorhub.database.entities.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,6 +13,6 @@ public interface RateRepository extends JpaRepository<RateEntity, UUID> {
 
     List<RateEntity> findByUser(UserEntity user);
 
-    List<RateEntity> findByManga(MangaEntity manga);
+    List<RateEntity> findByMangaId(Long id);
 
 }

@@ -12,4 +12,6 @@ public interface GenreRepository extends JpaRepository<GenreEntity, UUID> {
 
     GenreEntity findByName(String name);
 
+    GenreEntity findById(Long id);
+
 }

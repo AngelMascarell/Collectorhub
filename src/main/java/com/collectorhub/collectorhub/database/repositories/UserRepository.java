@@ -1,6 +1,5 @@
 package com.collectorhub.collectorhub.database.repositories;
 
-import com.collectorhub.collectorhub.database.entities.MangaEntity;
 import com.collectorhub.collectorhub.database.entities.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -13,5 +12,8 @@ public interface UserRepository extends JpaRepository<UserEntity, UUID> {
     UserEntity findByUsername(String username);
 
     UserEntity findByEmail(String email);
+
+    UserEntity findById(Long UUID);
+
 
 }

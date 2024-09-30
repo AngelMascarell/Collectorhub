@@ -9,6 +9,7 @@ C:\collectorHub\collectorhub\src\main\java\com\collectorhub\collectorhub\databas
 C:\collectorHub\collectorhub\src\main\java\com\collectorhub\collectorhub\database\entities\UserEntity.java
 C:\collectorHub\collectorhub\src\main\java\com\collectorhub\collectorhub\controller\GenreController.java
 C:\collectorHub\collectorhub\src\main\java\com\collectorhub\collectorhub\controller\MangaController.java
+C:\collectorHub\collectorhub\src\main\java\com\collectorhub\collectorhub\controller\request\RateRequest.java
 C:\collectorHub\collectorhub\src\main\java\com\collectorhub\collectorhub\services\impl\UserServiceImpl.java
 C:\collectorHub\collectorhub\src\main\java\com\collectorhub\collectorhub\database\BaseEntity.java
 C:\collectorHub\collectorhub\src\main\java\com\collectorhub\collectorhub\database\repositories\MangaRepository.java
@@ -21,6 +22,7 @@ C:\collectorHub\collectorhub\src\main\java\com\collectorhub\collectorhub\dto\Man
 C:\collectorHub\collectorhub\src\main\java\com\collectorhub\collectorhub\dto\RateDto.java
 C:\collectorHub\collectorhub\src\main\java\com\collectorhub\collectorhub\controller\response\GenreResponse.java
 C:\collectorHub\collectorhub\src\main\java\com\collectorhub\collectorhub\dto\GenreDto.java
+C:\collectorHub\collectorhub\src\main\java\com\collectorhub\collectorhub\controller\RateController.java
 C:\collectorHub\collectorhub\src\main\java\com\collectorhub\collectorhub\dto\mappers\AbstractGenreDtoMapper.java
 C:\collectorHub\collectorhub\src\main\java\com\collectorhub\collectorhub\services\impl\MangaServiceImpl.java
 C:\collectorHub\collectorhub\src\main\java\com\collectorhub\collectorhub\services\UserService.java
@@ -28,6 +30,7 @@ C:\collectorHub\collectorhub\src\main\java\com\collectorhub\collectorhub\service
 C:\collectorHub\collectorhub\src\main\java\com\collectorhub\collectorhub\database\repositories\UserRepository.java
 C:\collectorHub\collectorhub\src\main\java\com\collectorhub\collectorhub\config\SwaggerConfig.java
 C:\collectorHub\collectorhub\src\main\java\com\collectorhub\collectorhub\controller\request\GenreRequest.java
+C:\collectorHub\collectorhub\src\main\java\com\collectorhub\collectorhub\controller\response\RateResponse.java
 C:\collectorHub\collectorhub\src\main\java\com\collectorhub\collectorhub\dto\mappers\AbstractRateDtoMapper.java
 C:\collectorHub\collectorhub\src\main\java\com\collectorhub\collectorhub\dto\mappers\AbstractMangaDtoMapper.java
 C:\collectorHub\collectorhub\src\main\java\com\collectorhub\collectorhub\services\impl\BaseServiceImpl.java

@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(name = "manga")
+@Table(name = "Genre")
 @Transactional
 @Data
 @EqualsAndHashCode(callSuper = true)

@@ -20,4 +20,6 @@ public interface MangaRepository extends JpaRepository<MangaEntity, UUID> {
 
     List<MangaEntity> findByCompletedTrue();
 
+    MangaEntity findById(Long UUID);
+
 }

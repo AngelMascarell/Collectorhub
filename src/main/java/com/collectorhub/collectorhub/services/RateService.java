@@ -1,16 +1,21 @@
 package com.collectorhub.collectorhub.services;
 
-import com.collectorhub.collectorhub.database.entities.MangaEntity;
-import com.collectorhub.collectorhub.database.entities.RateEntity;
-import com.collectorhub.collectorhub.database.entities.UserEntity;
 import com.collectorhub.collectorhub.dto.RateDto;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface RateService {
 
-    public List<RateDto> findByUser(UserEntity user);
+    public RateDto createRate(RateDto rateDto);
 
-    public List<RateDto> findByManga(MangaEntity manga);
+    public RateDto updateRate(RateDto rateDto, UUID id);
 
+    public void deleteRate(UUID id);
+
+    public RateDto getRateById(UUID id);
+
+    public List<RateDto> getAllRates();
+
+    public List<RateDto> getAllRatesByMangaId(Long mangaId);
 }

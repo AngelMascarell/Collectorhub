@@ -1,4 +1,5 @@
 com\collectorhub\collectorhub\dto\UserDto$UserDtoBuilder.class
+com\collectorhub\collectorhub\controller\request\RateRequest$RateRequestBuilder.class
 com\collectorhub\collectorhub\dto\RateDto$RateDtoBuilder.class
 com\collectorhub\collectorhub\database\entities\UserEntity$UserEntityBuilderImpl.class
 com\collectorhub\collectorhub\dto\mappers\AbstractRateDtoMapper.class
@@ -28,6 +29,7 @@ com\collectorhub\collectorhub\dto\MangaDto.class
 com\collectorhub\collectorhub\database\entities\MangaEntity$MangaEntityBuilderImpl.class
 com\collectorhub\collectorhub\database\repositories\MangaRepository.class
 com\collectorhub\collectorhub\services\impl\GenreServiceImpl.class
+com\collectorhub\collectorhub\controller\RateController.class
 com\collectorhub\collectorhub\services\impl\UserServiceImpl.class
 com\collectorhub\collectorhub\services\impl\MangaServiceImpl.class
 com\collectorhub\collectorhub\database\entities\MangaEntity$MangaEntityBuilder.class
@@ -39,6 +41,7 @@ com\collectorhub\collectorhub\controller\response\MangaResponse.class
 com\collectorhub\collectorhub\database\entities\GenreEntity.class
 com\collectorhub\collectorhub\database\entities\UserEntity$UserEntityBuilder.class
 com\collectorhub\collectorhub\dto\mappers\AbstractRateDtoMapperImpl.class
+com\collectorhub\collectorhub\controller\response\RateResponse.class
 com\collectorhub\collectorhub\services\GenreService.class
 com\collectorhub\collectorhub\database\entities\MangaEntity.class
 com\collectorhub\collectorhub\database\repositories\GenreRepository.class
@@ -50,6 +53,8 @@ com\collectorhub\collectorhub\CollectorhubApplication.class
 com\collectorhub\collectorhub\config\SwaggerConfig.class
 com\collectorhub\collectorhub\services\UserService.class
 com\collectorhub\collectorhub\dto\mappers\AbstractGenreDtoMapper.class
+com\collectorhub\collectorhub\controller\request\RateRequest.class
+com\collectorhub\collectorhub\controller\response\RateResponse$RateResponseBuilder.class
 com\collectorhub\collectorhub\database\entities\UserEntity.class
 com\collectorhub\collectorhub\dto\mappers\AbstractGenreDtoMapperImpl.class
 com\collectorhub\collectorhub\database\repositories\RateRepository.class

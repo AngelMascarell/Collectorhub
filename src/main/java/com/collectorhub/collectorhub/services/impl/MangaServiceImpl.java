@@ -66,8 +66,11 @@ public class MangaServiceImpl implements MangaService {
                 .build();
 
         if (mangaDto.getGenreId() != null) {
-            GenreEntity genre = genreRepository.findById(mangaDto.getGenreId())
-                    .orElseThrow(() -> new EntityNotFoundException("Genre not found with id: " + mangaDto.getGenreId()));
+            GenreEntity genre = genreRepository.findById(mangaDto.getGenreId());
+                    //.orElseThrow(() -> new EntityNotFoundException("Genre not found with id: " + mangaDto.getGenreId()));
+            if (genre == null) {
+                throw new EntityNotFoundException("Genre not found with id: " + mangaDto.getGenreId());
+            }
 
             mangaEntity.setGenre(genre);
         }

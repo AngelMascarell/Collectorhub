@@ -19,7 +19,7 @@ import java.util.UUID;
 public class MangaResponse implements Serializable {
 
     @JsonProperty(value = "id")
-    private UUID id;
+    private Long id;
 
     @JsonProperty(value = "title")
     private String title;
@@ -28,7 +28,7 @@ public class MangaResponse implements Serializable {
     private String author;
 
     @JsonProperty(value = "genreId")
-    private UUID genreId;
+    private Long genreId;
 
     @JsonProperty(value = "chapters")
     private int chapters;

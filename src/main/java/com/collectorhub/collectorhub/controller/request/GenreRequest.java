@@ -17,9 +17,6 @@ import java.util.UUID;
 @Builder
 public class GenreRequest implements Serializable {
 
-    @JsonProperty(value = "id")
-    private UUID id;
-
     @JsonProperty(value = "name")
     private String name;
 

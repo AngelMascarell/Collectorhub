@@ -39,11 +39,11 @@ public class GenreController {
         return ResponseEntity.ok(genre);
     }
 
-   /* @GetMapping
+   @GetMapping
     public ResponseEntity<List<GenreResponse>> getAllGenres() {
         List<GenreResponse> allGenres = genreDtoMapper.fromGenreDtoListToGenreResponseList(genreService.getAllGenres());
         return ResponseEntity.ok(allGenres);
-    }*/
+    }
 
     @PutMapping("/{id}")
     public ResponseEntity<GenreResponse> updateGenre(@PathVariable UUID id, @RequestBody GenreRequest genreRequest) {

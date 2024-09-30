@@ -12,9 +12,9 @@ import java.util.UUID;
 @AllArgsConstructor
 public class RateDto {
 
-    private UUID id;
-    private UUID userId;
-    private UUID mangaId;
+    private Long id;
+    private Long userId;
+    private Long mangaId;
     private int rate;
     private String comment;
     private LocalDate date;

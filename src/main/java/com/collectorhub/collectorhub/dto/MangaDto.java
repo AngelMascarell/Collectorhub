@@ -15,13 +15,13 @@ import java.util.UUID;
 @AllArgsConstructor
 public class MangaDto {
 
-    private UUID id;
+    private Long id;
 
     private String title;
 
     private String author;
 
-    private UUID genreId;
+    private Long genreId;
 
     private int chapters;
 

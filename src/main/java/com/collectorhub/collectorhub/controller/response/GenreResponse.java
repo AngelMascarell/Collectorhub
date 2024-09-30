@@ -19,7 +19,7 @@ import java.util.UUID;
 public class GenreResponse implements Serializable {
 
     @JsonProperty(value = "id")
-    private UUID id;
+    private Long id;
 
     @JsonProperty(value = "name")
     private String name;

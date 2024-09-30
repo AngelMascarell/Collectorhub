@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @RestController
 @Slf4j
-@RequestMapping("/api/manga")
+@RequestMapping("/manga")
 public class MangaController {
 
     @Autowired
