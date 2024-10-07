@@ -58,6 +58,12 @@ public class MangaServiceImpl implements MangaService {
 
     @Override
     public MangaDto createManga(MangaDto mangaDto) {
+        // Comprobar si ya existe un manga con el mismo título
+        if (mangaRepository.existsByTitle(mangaDto.getTitle())) {
+            throw new IllegalArgumentException("A manga with this title already exists: " + mangaDto.getTitle());
+        }
+
+        // Crear la entidad de manga a partir del DTO
         MangaEntity mangaEntity = MangaEntity.builder()
                 .author(mangaDto.getAuthor())
                 .completed(mangaDto.isCompleted())
@@ -65,20 +71,22 @@ public class MangaServiceImpl implements MangaService {
                 .title(mangaDto.getTitle())
                 .build();
 
+        // Comprobar si el genreId no es nulo y asociarlo a la entidad de manga
         if (mangaDto.getGenreId() != null) {
             GenreEntity genre = genreRepository.findById(mangaDto.getGenreId());
-                    //.orElseThrow(() -> new EntityNotFoundException("Genre not found with id: " + mangaDto.getGenreId()));
             if (genre == null) {
                 throw new EntityNotFoundException("Genre not found with id: " + mangaDto.getGenreId());
             }
-
             mangaEntity.setGenre(genre);
         }
 
+        // Guardar la entidad de manga en la base de datos
         MangaEntity savedMangaEntity = mangaRepository.save(mangaEntity);
 
+        // Convertir la entidad guardada de vuelta a DTO y devolverla
         return mangaDtoMapper.fromMangaEntityToMangaDto(savedMangaEntity);
     }
+
 
     @Override
     public MangaDto getMangaById(UUID id) {
@@ -127,6 +135,11 @@ public class MangaServiceImpl implements MangaService {
     @Override
     public void deleteManga(UUID id) {
         mangaRepository.deleteById(id);
+    }
+
+    @Override
+    public boolean existsByTitle(String title) {
+        return mangaRepository.existsByTitle(title);
     }
 
 }

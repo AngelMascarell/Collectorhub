@@ -19,6 +19,8 @@ import java.util.UUID;
 @RequestMapping("/rate")
 public class RateController {
 
+    //TODO: AJUSTAR NOMBRE DE LOS ENDPOINTS, NO QUE TODOS SE LLAMEN /RATE
+
     @Autowired
     private RateService rateService;
 

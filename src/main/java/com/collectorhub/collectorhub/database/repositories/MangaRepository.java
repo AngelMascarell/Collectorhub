@@ -22,4 +22,6 @@ public interface MangaRepository extends JpaRepository<MangaEntity, UUID> {
 
     MangaEntity findById(Long UUID);
 
+    boolean existsByTitle(String tittle);
+
 }

@@ -55,4 +55,11 @@ public class MangaController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/existsByTitle/{title}")
+    public ResponseEntity<Boolean> existsByTitle(@PathVariable String title) {
+        boolean exists = mangaService.existsByTitle(title);
+        return ResponseEntity.ok(exists);
+    }
+
+
 }

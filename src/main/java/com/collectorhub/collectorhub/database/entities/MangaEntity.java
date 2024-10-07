@@ -21,7 +21,7 @@ import java.util.List;
 @AllArgsConstructor
 public class MangaEntity extends BaseEntity {
 
-    @Column(nullable = false, name = "tittle")
+    @Column(nullable = false, name = "tittle", unique = true)
     private String title;
 
     @Column(nullable = false, name = "author")

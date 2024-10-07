@@ -28,4 +28,6 @@ public interface MangaService {
     public MangaDto updateManga(MangaDto manga, UUID id);
 
     public void deleteManga(UUID id);
+
+    public boolean existsByTitle(String tittle);
 }
