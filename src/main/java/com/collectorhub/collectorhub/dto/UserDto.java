@@ -16,6 +16,7 @@ public class UserDto {
     private Long id;
     private String username;
     private String email;
+    private String password;
     private LocalDate birthdate;
     private LocalDate registerDate;
     private List<MangaDto> mangas;
