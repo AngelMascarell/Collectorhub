@@ -19,9 +19,6 @@ import java.util.List;
 @Builder
 public class UserRequest implements Serializable {
 
-    @JsonProperty(value = "userId")
-    private Long userId;
-
     @JsonProperty(value = "username")
     private String username;
 
@@ -33,6 +30,9 @@ public class UserRequest implements Serializable {
 
     @JsonProperty(value = "registerDate")
     private LocalDate registerDate;
+
+    @JsonProperty(value = "password")
+    private String password;
 
     @JsonProperty(value = "mangas")
     private List<MangaDto> mangas;
