@@ -14,4 +14,8 @@ public interface UserService {
     public UserDto createUser(UserDto userDto);
 
     public List<UserDto> getAllUsers();
+
+    public long countAllUsers();
+
+    public long countUsersSubscribed();
 }

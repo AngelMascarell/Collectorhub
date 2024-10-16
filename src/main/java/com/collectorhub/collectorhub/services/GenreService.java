@@ -21,4 +21,6 @@ public interface GenreService {
 
     public List<GenreDto> getAllGenres();
 
+    public long countAllGenres();
+
 }

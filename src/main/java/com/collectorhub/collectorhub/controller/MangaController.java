@@ -61,5 +61,11 @@ public class MangaController {
         return ResponseEntity.ok(exists);
     }
 
+    @GetMapping("/countAll")
+    public ResponseEntity<Long> getCountUsers() {
+        long mangaCount = mangaService.countAllMangas();
+        return ResponseEntity.ok(mangaCount);
+    }
+
 
 }

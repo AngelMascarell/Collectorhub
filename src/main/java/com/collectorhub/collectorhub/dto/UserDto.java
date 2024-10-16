@@ -21,4 +21,10 @@ public class UserDto {
     private LocalDate registerDate;
     private List<MangaDto> mangas;
 
+    private boolean isPremium = false;
+
+    private LocalDate premiumStartDate = null;
+
+    private LocalDate premiumEndDate = null;
+
 }

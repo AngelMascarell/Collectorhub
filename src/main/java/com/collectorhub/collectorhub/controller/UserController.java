@@ -52,6 +52,17 @@ public class UserController {
         return ResponseEntity.ok(responseList);
     }
 
+    @GetMapping("/countAll")
+    public ResponseEntity<Long> getCountUsers() {
+        long userCount = userService.countAllUsers();
+        return ResponseEntity.ok(userCount);
+    }
+
+    @GetMapping("/countUsersSubscribed")
+    public ResponseEntity<Long> getCountUsersSubscribed() {
+        long userCount = userService.countUsersSubscribed();
+        return ResponseEntity.ok(userCount);
+    }
 
 /*
     @PutMapping("/upd/{id}")

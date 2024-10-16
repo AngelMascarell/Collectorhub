@@ -39,4 +39,10 @@ public class UserEntity extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "manga_id")
     )
     private List<MangaEntity> mangas;
+
+    private boolean isPremium = false;
+
+    private LocalDate premiumStartDate = null;
+
+    private LocalDate premiumEndDate = null;
 }

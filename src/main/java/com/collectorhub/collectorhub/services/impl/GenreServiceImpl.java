@@ -82,4 +82,9 @@ public class GenreServiceImpl implements GenreService {
 
     }
 
+    @Override
+    public long countAllGenres() {
+        return genreRepository.count();
+    }
+
 }

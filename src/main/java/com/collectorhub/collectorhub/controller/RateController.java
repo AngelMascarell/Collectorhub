@@ -19,7 +19,6 @@ import java.util.UUID;
 @RequestMapping("/rate")
 public class RateController {
 
-    //TODO: AJUSTAR NOMBRE DE LOS ENDPOINTS, NO QUE TODOS SE LLAMEN /RATE
 
     @Autowired
     private RateService rateService;
@@ -27,32 +26,32 @@ public class RateController {
     @Autowired
     private AbstractRateDtoMapper rateDtoMapper;
 
-    @PostMapping
+    @PostMapping("/new")
     public ResponseEntity<RateResponse> createRate(@Valid @RequestBody RateRequest rateRequest) {
-        RateResponse createdManga = rateDtoMapper.fromRateDtoToRateResponse(rateService.createRate(rateDtoMapper.fromRateRequestToRateDto(rateRequest)));
-        return new ResponseEntity<>(createdManga, HttpStatus.CREATED);
+        RateResponse createdRate = rateDtoMapper.fromRateDtoToRateResponse(rateService.createRate(rateDtoMapper.fromRateRequestToRateDto(rateRequest)));
+        return new ResponseEntity<>(createdRate, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<RateResponse> getRateById(@PathVariable UUID id) {
-        RateResponse manga = rateDtoMapper.fromRateDtoToRateResponse(rateService.getRateById(id));
-        return ResponseEntity.ok(manga);
+        RateResponse rate = rateDtoMapper.fromRateDtoToRateResponse(rateService.getRateById(id));
+        return ResponseEntity.ok(rate);
     }
 
-    @GetMapping
+    @GetMapping("/getAll")
     public ResponseEntity<List<RateResponse>> getAllRates() {
-        List<RateResponse> allMangas = rateDtoMapper.fromRateDtoListToRateResponseList(rateService.getAllRates());
-        return ResponseEntity.ok(allMangas);
+        List<RateResponse> allRates = rateDtoMapper.fromRateDtoListToRateResponseList(rateService.getAllRates());
+        return ResponseEntity.ok(allRates);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<RateResponse> updateManga(@PathVariable UUID id, @RequestBody RateRequest rateRequest) {
-        RateResponse updatedManga = rateDtoMapper.fromRateDtoToRateResponse(rateService.updateRate(rateDtoMapper.fromRateRequestToRateDto(rateRequest), id));
-        return ResponseEntity.ok(updatedManga);
+    @PutMapping("/update/{id}")
+    public ResponseEntity<RateResponse> updateRate(@PathVariable UUID id, @RequestBody RateRequest rateRequest) {
+        RateResponse updatedRate = rateDtoMapper.fromRateDtoToRateResponse(rateService.updateRate(rateDtoMapper.fromRateRequestToRateDto(rateRequest), id));
+        return ResponseEntity.ok(updatedRate);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteManga(@PathVariable UUID id) {
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteRate(@PathVariable UUID id) {
         rateService.deleteRate(id);
         return ResponseEntity.noContent().build();
     }

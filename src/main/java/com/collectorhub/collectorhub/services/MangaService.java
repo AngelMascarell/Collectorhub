@@ -30,4 +30,6 @@ public interface MangaService {
     public void deleteManga(UUID id);
 
     public boolean existsByTitle(String tittle);
+
+    public long countAllMangas();
 }

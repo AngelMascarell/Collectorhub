@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-10-15T13:10:56+0200",
+    date = "2024-10-16T15:06:21+0200",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.10 (Oracle Corporation)"
 )
 @Component
@@ -34,6 +34,8 @@ public class AbstractUserDtoMapperImpl implements AbstractUserDtoMapper {
         userDto.birthdate( userEntity.getBirthdate() );
         userDto.registerDate( userEntity.getRegisterDate() );
         userDto.mangas( mangaEntityListToMangaDtoList( userEntity.getMangas() ) );
+        userDto.premiumStartDate( userEntity.getPremiumStartDate() );
+        userDto.premiumEndDate( userEntity.getPremiumEndDate() );
 
         return userDto.build();
     }
@@ -55,6 +57,8 @@ public class AbstractUserDtoMapperImpl implements AbstractUserDtoMapper {
         if ( list != null ) {
             userDto.mangas( new ArrayList<MangaDto>( list ) );
         }
+        userDto.premiumStartDate( userRequest.getPremiumStartDate() );
+        userDto.premiumEndDate( userRequest.getPremiumEndDate() );
 
         return userDto.build();
     }
@@ -76,6 +80,8 @@ public class AbstractUserDtoMapperImpl implements AbstractUserDtoMapper {
         if ( list != null ) {
             userResponse.mangas( new ArrayList<MangaDto>( list ) );
         }
+        userResponse.premiumStartDate( userDto.getPremiumStartDate() );
+        userResponse.premiumEndDate( userDto.getPremiumEndDate() );
 
         return userResponse.build();
     }
@@ -95,6 +101,8 @@ public class AbstractUserDtoMapperImpl implements AbstractUserDtoMapper {
         userEntity.birthdate( userDto.getBirthdate() );
         userEntity.registerDate( userDto.getRegisterDate() );
         userEntity.mangas( mangaDtoListToMangaEntityList( userDto.getMangas() ) );
+        userEntity.premiumStartDate( userDto.getPremiumStartDate() );
+        userEntity.premiumEndDate( userDto.getPremiumEndDate() );
 
         return userEntity.build();
     }

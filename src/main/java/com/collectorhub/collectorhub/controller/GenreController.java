@@ -58,5 +58,11 @@ public class GenreController {
         genreService.deleteGenre(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/countAll")
+    public ResponseEntity<Long> getCountGenres() {
+        long genreCount = genreService.countAllGenres();
+        return ResponseEntity.ok(genreCount);
+    }
 }
 

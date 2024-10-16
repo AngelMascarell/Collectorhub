@@ -55,13 +55,27 @@ public class UserServiceImpl implements UserService {
     public List<UserDto> getAllUsers() {
         List<UserEntity> userEntities = userRepository.findAll();
 
-        // Mapea cada UserEntity a UserDto utilizando el mapper
         return userEntities.stream()
-                .map(userDtoMapper::fromUserEntityToUserDto) // Cambia aquí para mapear individualmente
-                .collect(Collectors.toList()); // Utiliza collect para convertir a lista
+                .map(userDtoMapper::fromUserEntityToUserDto)
+                .collect(Collectors.toList());
     }
 
+    @Override
+    public long countAllUsers() {
+        return userRepository.count();
+    }
 
+    @Override
+    public long countUsersSubscribed() {
+        List<UserEntity> totalUsers = userRepository.findAll();
+        long usersSubscribed = 0;
+        for(UserEntity user: totalUsers) {
+            if (user.isPremium()) {
+                usersSubscribed += 1;
+            }
+        }
+        return usersSubscribed;
+    }
 
 
 }

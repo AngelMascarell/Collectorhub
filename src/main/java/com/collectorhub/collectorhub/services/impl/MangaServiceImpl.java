@@ -142,4 +142,9 @@ public class MangaServiceImpl implements MangaService {
         return mangaRepository.existsByTitle(title);
     }
 
+    @Override
+    public long countAllMangas() {
+        return mangaRepository.count();
+    }
+
 }

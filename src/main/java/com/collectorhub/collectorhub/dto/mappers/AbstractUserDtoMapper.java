@@ -17,15 +17,15 @@ public interface AbstractUserDtoMapper {
     UserDto fromUserEntityToUserDto(UserEntity userEntity);
 
     default List<UserDto> fromUserEntityListToUserDtoList(List<UserEntity> userEntityList) {
-        List<UserDto> userDtoList = new ArrayList<>();  // Crea una lista para almacenar los DTOs
+        List<UserDto> userDtoList = new ArrayList<>();
 
         for (UserEntity userEntity : userEntityList) {
-            UserDto userDto = fromUserEntityToUserDto(userEntity);  // Convierte la entidad a DTO
-            userDto.setId(userEntity.getId());  // Asegúrate de que esto no esté nulo
-            userDtoList.add(userDto);  // Agrega el DTO a la lista
+            UserDto userDto = fromUserEntityToUserDto(userEntity);
+            userDto.setId(userEntity.getId());
+            userDtoList.add(userDto);
         }
 
-        return userDtoList;  // Devuelve la lista completa
+        return userDtoList;
     }
 
 

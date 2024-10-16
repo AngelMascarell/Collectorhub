@@ -37,4 +37,13 @@ public class UserResponse implements Serializable {
     @JsonProperty(value = "mangas")
     private List<MangaDto> mangas;
 
+    @JsonProperty(value = "isPremium")
+    private boolean isPremium;
+
+    @JsonProperty(value = "premiumStartDate")
+    private LocalDate premiumStartDate;
+
+    @JsonProperty(value = "premiumEndDate")
+    private LocalDate premiumEndDate;
+
 }
