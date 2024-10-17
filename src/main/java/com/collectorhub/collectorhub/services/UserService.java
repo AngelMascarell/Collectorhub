@@ -8,6 +8,7 @@ import java.util.List;
 public interface UserService {
 
     public UserDto findByUsername(String username);
+    public UserDto findById(long id);
 
     public UserDto findByEmail(String email);
 

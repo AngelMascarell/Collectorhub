@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-10-16T15:06:22+0200",
+    date = "2024-10-17T14:40:40+0200",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.10 (Oracle Corporation)"
 )
 @Component
@@ -31,20 +31,6 @@ public class AbstractAppReviewDtoMapperImpl implements AbstractAppReviewDtoMappe
         appReviewDto.date( AppReviewEntity.getDate() );
 
         return appReviewDto.build();
-    }
-
-    @Override
-    public List<AppReviewDto> fromAppReviewEntityListToAppReviewDtoList(List<AppReviewEntity> AppReviewEntityList) {
-        if ( AppReviewEntityList == null ) {
-            return null;
-        }
-
-        List<AppReviewDto> list = new ArrayList<AppReviewDto>( AppReviewEntityList.size() );
-        for ( AppReviewEntity appReviewEntity : AppReviewEntityList ) {
-            list.add( fromAppReviewEntityToAppReviewDto( appReviewEntity ) );
-        }
-
-        return list;
     }
 
     @Override

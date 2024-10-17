@@ -11,14 +11,24 @@ import com.collectorhub.collectorhub.dto.RateDto;
 import org.mapstruct.Mapper;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface AbstractAppReviewDtoMapper {
 
     AppReviewDto fromAppReviewEntityToAppReviewDto(AppReviewEntity AppReviewEntity);
 
-    List<AppReviewDto> fromAppReviewEntityListToAppReviewDtoList(List<AppReviewEntity> AppReviewEntityList);
-
+    default List<AppReviewDto> fromAppReviewEntityListToAppReviewDtoList(List<AppReviewEntity> appReviewEntityList) {
+        return appReviewEntityList.stream()
+                .map(review -> new AppReviewDto(
+                        review.getId(),
+                        review.getUser() != null ? review.getUser().getId() : null,
+                        review.getRate(),
+                        review.getComment(),
+                        review.getDate()
+                ))
+                .collect(Collectors.toList());
+    }
     AppReviewDto fromAppReviewRequestToAppReviewDto(AppReviewRequest AppReviewRequest);
 
     AppReviewResponse fromAppReviewDtoToAppReviewResponse(AppReviewDto AppReviewDto);

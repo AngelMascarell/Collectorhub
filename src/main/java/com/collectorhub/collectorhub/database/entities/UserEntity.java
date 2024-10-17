@@ -8,8 +8,12 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -20,7 +24,7 @@ import java.util.List;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserEntity extends BaseEntity {
+public class UserEntity extends BaseEntity implements UserDetails {
 
     private String username;
 
@@ -32,6 +36,20 @@ public class UserEntity extends BaseEntity {
 
     private LocalDate registerDate;
 
+    private boolean isPremium = false;
+
+    private LocalDate premiumStartDate = null;
+
+    private LocalDate premiumEndDate = null;
+
+    @ManyToOne
+    @JoinTable(
+            name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private RoleEntity role;
+
     @ManyToMany
     @JoinTable(
             name = "users_mangas",
@@ -40,9 +58,28 @@ public class UserEntity extends BaseEntity {
     )
     private List<MangaEntity> mangas;
 
-    private boolean isPremium = false;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.getName()));
+    }
 
-    private LocalDate premiumStartDate = null;
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
 
-    private LocalDate premiumEndDate = null;
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

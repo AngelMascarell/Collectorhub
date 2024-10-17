@@ -1,13 +1,10 @@
 package com.collectorhub.collectorhub.controller;
 
-import com.collectorhub.collectorhub.controller.request.RateRequest;
 import com.collectorhub.collectorhub.controller.request.UserRequest;
-import com.collectorhub.collectorhub.controller.response.RateResponse;
 import com.collectorhub.collectorhub.controller.response.UserResponse;
 import com.collectorhub.collectorhub.controller.response.UserResponseList;
-import com.collectorhub.collectorhub.dto.mappers.AbstractRateDtoMapper;
+import com.collectorhub.collectorhub.dto.UserDto;
 import com.collectorhub.collectorhub.dto.mappers.AbstractUserDtoMapper;
-import com.collectorhub.collectorhub.services.RateService;
 import com.collectorhub.collectorhub.services.UserService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @Slf4j
@@ -38,12 +34,24 @@ public class UserController {
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 
-    /*
-    @GetMapping("/{id}")
-    public ResponseEntity<UserResponse> getUserById(@PathVariable UUID id) {
-        UserResponse user = userDtoMapper.fromRateDtoToRateResponse(userService.getRateById(id));
+
+    @GetMapping("getOne/{id}")
+    public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {
+        UserResponse user = userDtoMapper.fromUserDtoToUserResponse(userService.findById(id));
         return ResponseEntity.ok(user);
-    }*/
+    }
+
+    @GetMapping("/{userId}/username")
+    public ResponseEntity<String> getUsername(@PathVariable Long userId) {
+        UserDto userOpt = userService.findById(userId);
+
+        if (userOpt != null) {
+            return ResponseEntity.ok(userOpt.getUsername());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Desconocido");
+        }
+    }
+
 
     @GetMapping("/all")
     public ResponseEntity<UserResponseList> getAllUsers() {

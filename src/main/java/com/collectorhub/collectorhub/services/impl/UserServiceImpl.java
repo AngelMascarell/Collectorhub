@@ -30,6 +30,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDto findById(long id) {
+        return userDtoMapper.fromUserEntityToUserDto(userRepository.findById(id));
+    }
+
+    @Override
     public UserDto findByEmail(String email) {
         return userDtoMapper.fromUserEntityToUserDto(userRepository.findByEmail(email));
     }
