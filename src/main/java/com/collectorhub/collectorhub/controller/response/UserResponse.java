@@ -1,6 +1,7 @@
 package com.collectorhub.collectorhub.controller.response;
 
 import com.collectorhub.collectorhub.dto.MangaDto;
+import com.collectorhub.collectorhub.dto.RoleDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -45,5 +46,8 @@ public class UserResponse implements Serializable {
 
     @JsonProperty(value = "premiumEndDate")
     private LocalDate premiumEndDate;
+
+    @JsonProperty(value = "role")
+    private RoleDto role;
 
 }

@@ -31,7 +31,28 @@ public interface AbstractUserDtoMapper {
 
     UserDto fromUserRequestToUserDto(UserRequest userRequest);
 
-    UserResponse fromUserDtoToUserResponse(UserDto userDto);
+    default UserResponse fromUserDtoToUserResponse(UserDto userDto) {
+        if (userDto == null) {
+            return null;
+        }
+
+        UserResponse userResponse = new UserResponse();
+        userResponse.setId(userDto.getId());
+        userResponse.setUsername(userDto.getUsername());
+        userResponse.setEmail(userDto.getEmail());
+        userResponse.setBirthdate(userDto.getBirthdate());
+        userResponse.setRegisterDate(userDto.getRegisterDate());
+        userResponse.setPremium(userDto.isPremium());
+
+        userResponse.setPremiumStartDate(userDto.getPremiumStartDate() != null ? userDto.getPremiumStartDate() : null);
+        userResponse.setPremiumEndDate(userDto.getPremiumEndDate() != null ? userDto.getPremiumEndDate() : null);
+
+        if (userDto.getRole() != null) {
+            userResponse.setRole(userDto.getRole());
+        }
+
+        return userResponse;
+    }
 
     UserEntity fromUserDtoToUserEntity(UserDto userDto);
 

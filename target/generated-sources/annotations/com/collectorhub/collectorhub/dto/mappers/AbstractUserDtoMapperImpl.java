@@ -3,8 +3,10 @@ package com.collectorhub.collectorhub.dto.mappers;
 import com.collectorhub.collectorhub.controller.request.UserRequest;
 import com.collectorhub.collectorhub.controller.response.UserResponse;
 import com.collectorhub.collectorhub.database.entities.MangaEntity;
+import com.collectorhub.collectorhub.database.entities.RoleEntity;
 import com.collectorhub.collectorhub.database.entities.UserEntity;
 import com.collectorhub.collectorhub.dto.MangaDto;
+import com.collectorhub.collectorhub.dto.RoleDto;
 import com.collectorhub.collectorhub.dto.UserDto;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +15,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-10-17T14:40:40+0200",
+    date = "2024-10-18T14:15:21+0200",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.10 (Oracle Corporation)"
 )
 @Component
@@ -36,6 +38,7 @@ public class AbstractUserDtoMapperImpl implements AbstractUserDtoMapper {
         userDto.mangas( mangaEntityListToMangaDtoList( userEntity.getMangas() ) );
         userDto.premiumStartDate( userEntity.getPremiumStartDate() );
         userDto.premiumEndDate( userEntity.getPremiumEndDate() );
+        userDto.role( roleEntityToRoleDto( userEntity.getRole() ) );
 
         return userDto.build();
     }
@@ -64,29 +67,6 @@ public class AbstractUserDtoMapperImpl implements AbstractUserDtoMapper {
     }
 
     @Override
-    public UserResponse fromUserDtoToUserResponse(UserDto userDto) {
-        if ( userDto == null ) {
-            return null;
-        }
-
-        UserResponse.UserResponseBuilder userResponse = UserResponse.builder();
-
-        userResponse.id( userDto.getId() );
-        userResponse.username( userDto.getUsername() );
-        userResponse.email( userDto.getEmail() );
-        userResponse.birthdate( userDto.getBirthdate() );
-        userResponse.registerDate( userDto.getRegisterDate() );
-        List<MangaDto> list = userDto.getMangas();
-        if ( list != null ) {
-            userResponse.mangas( new ArrayList<MangaDto>( list ) );
-        }
-        userResponse.premiumStartDate( userDto.getPremiumStartDate() );
-        userResponse.premiumEndDate( userDto.getPremiumEndDate() );
-
-        return userResponse.build();
-    }
-
-    @Override
     public UserEntity fromUserDtoToUserEntity(UserDto userDto) {
         if ( userDto == null ) {
             return null;
@@ -102,6 +82,7 @@ public class AbstractUserDtoMapperImpl implements AbstractUserDtoMapper {
         userEntity.registerDate( userDto.getRegisterDate() );
         userEntity.premiumStartDate( userDto.getPremiumStartDate() );
         userEntity.premiumEndDate( userDto.getPremiumEndDate() );
+        userEntity.role( roleDtoToRoleEntity( userDto.getRole() ) );
         userEntity.mangas( mangaDtoListToMangaEntityList( userDto.getMangas() ) );
 
         return userEntity.build();
@@ -148,6 +129,32 @@ public class AbstractUserDtoMapperImpl implements AbstractUserDtoMapper {
         }
 
         return list1;
+    }
+
+    protected RoleDto roleEntityToRoleDto(RoleEntity roleEntity) {
+        if ( roleEntity == null ) {
+            return null;
+        }
+
+        RoleDto.RoleDtoBuilder roleDto = RoleDto.builder();
+
+        roleDto.id( roleEntity.getId() );
+        roleDto.name( roleEntity.getName() );
+
+        return roleDto.build();
+    }
+
+    protected RoleEntity roleDtoToRoleEntity(RoleDto roleDto) {
+        if ( roleDto == null ) {
+            return null;
+        }
+
+        RoleEntity roleEntity = new RoleEntity();
+
+        roleEntity.setId( roleDto.getId() );
+        roleEntity.setName( roleDto.getName() );
+
+        return roleEntity;
     }
 
     protected MangaEntity mangaDtoToMangaEntity(MangaDto mangaDto) {

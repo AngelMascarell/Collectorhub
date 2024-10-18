@@ -1,5 +1,6 @@
 package com.collectorhub.collectorhub.controller;
 
+import com.collectorhub.collectorhub.controller.request.UserFilterRequest;
 import com.collectorhub.collectorhub.controller.request.UserRequest;
 import com.collectorhub.collectorhub.controller.response.UserResponse;
 import com.collectorhub.collectorhub.controller.response.UserResponseList;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @Slf4j
@@ -72,12 +74,26 @@ public class UserController {
         return ResponseEntity.ok(userCount);
     }
 
-/*
+
     @PutMapping("/upd/{id}")
-    public ResponseEntity<UserResponse> updateUser(@PathVariable UUID id, @RequestBody RateRequest rateRequest) {
-        UserResponse updatedUser = userDtoMapper.fromRateDtoToRateResponse(userService.updateRate(userDtoMapper.fromRateRequestToRateDto(rateRequest), id));
+    public ResponseEntity<UserResponse> updateUser(@PathVariable Long id, @RequestBody UserRequest userRequest) {
+        UserResponse updatedUser = userDtoMapper.fromUserDtoToUserResponse(userService.updateUser(userDtoMapper.fromUserRequestToUserDto(userRequest), id));
         return ResponseEntity.ok(updatedUser);
     }
+
+    @PostMapping("/getUsersFilter")
+    public ResponseEntity<List<UserResponse>> getUsersFilter(@RequestBody UserFilterRequest filter) {
+        List<UserDto> users = userService.filterUsers(filter);
+
+        List<UserResponse> userResponses = users.stream()
+                .map(userDto -> userDtoMapper.fromUserDtoToUserResponse(userDto))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(userResponses);
+    }
+
+
+    /*
 
     @DeleteMapping("/del/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {

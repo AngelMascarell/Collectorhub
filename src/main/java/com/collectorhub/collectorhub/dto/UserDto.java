@@ -27,4 +27,6 @@ public class UserDto {
 
     private LocalDate premiumEndDate = null;
 
+    private RoleDto role;
+
 }
