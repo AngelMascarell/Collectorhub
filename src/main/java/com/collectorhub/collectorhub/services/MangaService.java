@@ -32,4 +32,6 @@ public interface MangaService {
     public boolean existsByTitle(String tittle);
 
     public long countAllMangas();
+
+    List<MangaDto> findMangasByIds(List<Long> mangaIds);
 }

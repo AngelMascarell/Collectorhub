@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -39,5 +40,9 @@ public class MangaEntity extends BaseEntity {
 
     @ManyToMany(mappedBy = "mangas")
     private List<UserEntity> propietarios;
+
+    @ManyToMany(mappedBy = "mangas")
+    private List<MangaListEntity> listas = new ArrayList<>();
+
 
 }

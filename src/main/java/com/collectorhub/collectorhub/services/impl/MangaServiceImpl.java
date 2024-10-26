@@ -13,9 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.nio.ByteBuffer;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -147,4 +147,26 @@ public class MangaServiceImpl implements MangaService {
         return mangaRepository.count();
     }
 
+    @Override
+    public List<MangaDto> findMangasByIds(List<Long> mangaIds) {
+        // Aquí buscamos directamente usando los Longs
+        List<MangaEntity> mangaEntities = mangaRepository.findAllByIdIn(mangaIds);
+
+        // Convertir las entidades de manga a MangaDto
+        return mangaEntities.stream()
+                .map(mangaDtoMapper::fromMangaEntityToMangaDto)
+                .collect(Collectors.toList());
+    }
+
+    private List<Long> uuidToLong(UUID uuid) {
+        if (uuid == null) {
+            return Arrays.asList(null, null); // Manejo de nulos
+        }
+        return Arrays.asList(uuid.getMostSignificantBits(), uuid.getLeastSignificantBits());
+    }
+
+    public UUID longToUuid(Long id) {
+        // Lógica para convertir Long a UUID
+        return UUID.nameUUIDFromBytes(Long.toString(id).getBytes());
+    }
 }

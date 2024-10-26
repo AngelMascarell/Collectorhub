@@ -2,6 +2,8 @@ package com.collectorhub.collectorhub.controller;
 
 import com.collectorhub.collectorhub.controller.request.MangaRequest;
 import com.collectorhub.collectorhub.controller.response.MangaResponse;
+import com.collectorhub.collectorhub.controller.response.ObtainMangasResponse;
+import com.collectorhub.collectorhub.dto.MangaDto;
 import com.collectorhub.collectorhub.dto.mappers.AbstractMangaDtoMapper;
 import com.collectorhub.collectorhub.services.MangaService;
 import jakarta.validation.Valid;
@@ -27,25 +29,26 @@ public class MangaController {
 
     @PostMapping
     public ResponseEntity<MangaResponse> createManga(@Valid @RequestBody MangaRequest mangaRequest) {
-        MangaResponse createdManga = mangaDtoMapper.fromMangaDtotoMangaResponse(mangaService.createManga(mangaDtoMapper.fromMangaRequestToMangaDto(mangaRequest)));
+        MangaResponse createdManga = mangaDtoMapper.fromMangaDtoToMangaResponse(mangaService.createManga(mangaDtoMapper.fromMangaRequestToMangaDto(mangaRequest)));
         return new ResponseEntity<>(createdManga, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<MangaResponse> getMangaById(@PathVariable UUID id) {
-        MangaResponse manga = mangaDtoMapper.fromMangaDtotoMangaResponse(mangaService.getMangaById(id));
+        MangaResponse manga = mangaDtoMapper.fromMangaDtoToMangaResponse(mangaService.getMangaById(id));
         return ResponseEntity.ok(manga);
     }
 
-    @GetMapping
-    public ResponseEntity<List<MangaResponse>> getAllMangas() {
-        List<MangaResponse> allMangas = mangaDtoMapper.fromMangaDtoListToMangaResponseList(mangaService.getAllMangas());
-        return ResponseEntity.ok(allMangas);
+    @GetMapping("/getAll")
+    public ResponseEntity<ObtainMangasResponse> getAllMangas() {
+        List<MangaDto> allMangas = mangaService.getAllMangas();
+        ObtainMangasResponse response = mangaDtoMapper.fromMangaDtoListToObtainMangaResponse(allMangas);
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<MangaResponse> updateManga(@PathVariable UUID id, @RequestBody MangaRequest mangaRequest) {
-        MangaResponse updatedManga = mangaDtoMapper.fromMangaDtotoMangaResponse(mangaService.updateManga(mangaDtoMapper.fromMangaRequestToMangaDto(mangaRequest), id));
+        MangaResponse updatedManga = mangaDtoMapper.fromMangaDtoToMangaResponse(mangaService.updateManga(mangaDtoMapper.fromMangaRequestToMangaDto(mangaRequest), id));
         return ResponseEntity.ok(updatedManga);
     }
 

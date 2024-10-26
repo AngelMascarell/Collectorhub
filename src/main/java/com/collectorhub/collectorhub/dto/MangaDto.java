@@ -13,6 +13,7 @@ import java.util.UUID;
 @Data
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class MangaDto {
 
     private Long id;
@@ -26,5 +27,4 @@ public class MangaDto {
     private int chapters;
 
     private boolean completed;
-
 }
