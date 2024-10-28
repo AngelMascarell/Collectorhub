@@ -4,9 +4,11 @@ import com.collectorhub.collectorhub.controller.request.UserRequest;
 import com.collectorhub.collectorhub.controller.response.UserResponse;
 import com.collectorhub.collectorhub.database.entities.MangaEntity;
 import com.collectorhub.collectorhub.database.entities.RoleEntity;
+import com.collectorhub.collectorhub.database.entities.TaskEntity;
 import com.collectorhub.collectorhub.database.entities.UserEntity;
 import com.collectorhub.collectorhub.dto.MangaDto;
 import com.collectorhub.collectorhub.dto.RoleDto;
+import com.collectorhub.collectorhub.dto.TaskDto;
 import com.collectorhub.collectorhub.dto.UserDto;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +17,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-10-22T13:00:30+0200",
+    date = "2024-10-28T13:22:36+0100",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.10 (Oracle Corporation)"
 )
 @Component
@@ -39,6 +41,7 @@ public class AbstractUserDtoMapperImpl implements AbstractUserDtoMapper {
         userDto.premiumStartDate( userEntity.getPremiumStartDate() );
         userDto.premiumEndDate( userEntity.getPremiumEndDate() );
         userDto.role( roleEntityToRoleDto( userEntity.getRole() ) );
+        userDto.tasks( taskEntityListToTaskDtoList( userEntity.getTasks() ) );
 
         return userDto.build();
     }
@@ -84,6 +87,7 @@ public class AbstractUserDtoMapperImpl implements AbstractUserDtoMapper {
         userEntity.premiumEndDate( userDto.getPremiumEndDate() );
         userEntity.role( roleDtoToRoleEntity( userDto.getRole() ) );
         userEntity.mangas( mangaDtoListToMangaEntityList( userDto.getMangas() ) );
+        userEntity.tasks( taskDtoListToTaskEntityList( userDto.getTasks() ) );
 
         return userEntity.build();
     }
@@ -144,6 +148,32 @@ public class AbstractUserDtoMapperImpl implements AbstractUserDtoMapper {
         return roleDto.build();
     }
 
+    protected TaskDto taskEntityToTaskDto(TaskEntity taskEntity) {
+        if ( taskEntity == null ) {
+            return null;
+        }
+
+        TaskDto.TaskDtoBuilder taskDto = TaskDto.builder();
+
+        taskDto.id( taskEntity.getId() );
+        taskDto.description( taskEntity.getDescription() );
+
+        return taskDto.build();
+    }
+
+    protected List<TaskDto> taskEntityListToTaskDtoList(List<TaskEntity> list) {
+        if ( list == null ) {
+            return null;
+        }
+
+        List<TaskDto> list1 = new ArrayList<TaskDto>( list.size() );
+        for ( TaskEntity taskEntity : list ) {
+            list1.add( taskEntityToTaskDto( taskEntity ) );
+        }
+
+        return list1;
+    }
+
     protected RoleEntity roleDtoToRoleEntity(RoleDto roleDto) {
         if ( roleDto == null ) {
             return null;
@@ -181,6 +211,32 @@ public class AbstractUserDtoMapperImpl implements AbstractUserDtoMapper {
         List<MangaEntity> list1 = new ArrayList<MangaEntity>( list.size() );
         for ( MangaDto mangaDto : list ) {
             list1.add( mangaDtoToMangaEntity( mangaDto ) );
+        }
+
+        return list1;
+    }
+
+    protected TaskEntity taskDtoToTaskEntity(TaskDto taskDto) {
+        if ( taskDto == null ) {
+            return null;
+        }
+
+        TaskEntity.TaskEntityBuilder<?, ?> taskEntity = TaskEntity.builder();
+
+        taskEntity.id( taskDto.getId() );
+        taskEntity.description( taskDto.getDescription() );
+
+        return taskEntity.build();
+    }
+
+    protected List<TaskEntity> taskDtoListToTaskEntityList(List<TaskDto> list) {
+        if ( list == null ) {
+            return null;
+        }
+
+        List<TaskEntity> list1 = new ArrayList<TaskEntity>( list.size() );
+        for ( TaskDto taskDto : list ) {
+            list1.add( taskDtoToTaskEntity( taskDto ) );
         }
 
         return list1;

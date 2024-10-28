@@ -2,6 +2,7 @@ package com.collectorhub.collectorhub.controller.response;
 
 import com.collectorhub.collectorhub.dto.MangaDto;
 import com.collectorhub.collectorhub.dto.RoleDto;
+import com.collectorhub.collectorhub.dto.TaskDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -49,5 +50,8 @@ public class UserResponse implements Serializable {
 
     @JsonProperty(value = "role")
     private RoleDto role;
+
+    @JsonProperty(value = "tasks")
+    private List<TaskDto> tasks;
 
 }

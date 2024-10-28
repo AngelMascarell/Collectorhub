@@ -29,4 +29,6 @@ public class UserDto {
 
     private RoleDto role;
 
+    private List<TaskDto> tasks;
+
 }

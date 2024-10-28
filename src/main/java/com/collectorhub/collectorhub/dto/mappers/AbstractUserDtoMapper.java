@@ -28,7 +28,6 @@ public interface AbstractUserDtoMapper {
         return userDtoList;
     }
 
-
     UserDto fromUserRequestToUserDto(UserRequest userRequest);
 
     default UserResponse fromUserDtoToUserResponse(UserDto userDto) {
@@ -49,6 +48,10 @@ public interface AbstractUserDtoMapper {
 
         if (userDto.getRole() != null) {
             userResponse.setRole(userDto.getRole());
+        }
+
+        if (userDto.getTasks() != null) {
+            userResponse.setTasks(userDto.getTasks());
         }
 
         return userResponse;

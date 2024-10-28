@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -61,9 +60,6 @@ public class MangaListServiceImpl implements MangaListService {
         return mangaListDtoMapper.fromMangaListEntityToMangaListDto(mangaListRepository.save(nuevaLista));
     }
 
-
-
-
     public List<MangaDto> obtenerMangasDeLista(UUID listaId) {
         MangaListEntity lista = mangaListRepository.findById(listaId)
                 .orElseThrow(() -> new EntityNotFoundException("Lista no encontrada"));
@@ -76,15 +72,12 @@ public class MangaListServiceImpl implements MangaListService {
         dto.setName(request.getListName());
         dto.setDescription(request.getDescription());
 
-
-
         // Ahora buscar mangas por UUID
         List<MangaDto> mangaDtos = mangaService.findMangasByIds(request.getMangaIds());
         dto.setMangas(mangaDtos); // Asignar la lista de MangaDto
 
         return dto;
     }
-
 
     public UUID longToUuid(Long id) {
         if (id == null) {
