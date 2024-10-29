@@ -3,9 +3,11 @@ package com.collectorhub.collectorhub.dto.mappers;
 import com.collectorhub.collectorhub.controller.request.GamificationRequest;
 import com.collectorhub.collectorhub.controller.response.GamificationResponse;
 import com.collectorhub.collectorhub.database.entities.GamificationEntity;
+import com.collectorhub.collectorhub.dto.GamificationConditionDto;
 import com.collectorhub.collectorhub.dto.GamificationDto;
 import org.mapstruct.Mapper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Mapper(componentModel = "spring")

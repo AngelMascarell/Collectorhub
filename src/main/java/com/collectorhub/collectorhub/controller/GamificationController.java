@@ -1,6 +1,7 @@
 package com.collectorhub.collectorhub.controller;
 
 import com.collectorhub.collectorhub.controller.request.GamificationRequest;
+import com.collectorhub.collectorhub.controller.response.GamificationListResponse;
 import com.collectorhub.collectorhub.controller.response.GamificationResponse;
 import com.collectorhub.collectorhub.dto.GamificationDto;
 import com.collectorhub.collectorhub.dto.mappers.AbstractGamificationDtoMapper;
@@ -9,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,9 +49,36 @@ public class GamificationController {
 
     @GetMapping("/images/{filename}")
     public ResponseEntity<byte[]> getImage(@PathVariable String filename) throws IOException {
+        // Define el directorio donde se encuentran las imágenes
         Path filePath = Paths.get(uploadDir + filename);
+
+        // Verifica si el archivo existe
+        if (!Files.exists(filePath)) {
+            return ResponseEntity.notFound().build(); // Retorna 404 si la imagen no se encuentra
+        }
+
         byte[] image = Files.readAllBytes(filePath);
-        return ResponseEntity.ok().body(image);
+
+        // Determina el tipo de contenido (por ejemplo, "image/jpeg", "image/png")
+        String contentType = Files.probeContentType(filePath);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .body(image);
+    }
+
+    @GetMapping("/getAll")
+    public ResponseEntity<GamificationListResponse> getAllGamification() {
+        List<GamificationDto> gamifications = gamificationService.getAllGamification();
+
+        List<GamificationResponse> responses = gamifications.stream()
+                .map(gamificationDtoMapper::fromGamificationDtoToGamificationResponse)
+                .toList();
+
+        GamificationListResponse listResponse = new GamificationListResponse();
+        listResponse.setGamificationResponseList(responses);
+
+        return ResponseEntity.ok(listResponse);
     }
 
     @PostMapping("/new")
@@ -65,15 +94,6 @@ public class GamificationController {
                 .orElseThrow(() -> new RuntimeException("Gamification not found"));
         GamificationResponse response = gamificationDtoMapper.fromGamificationDtoToGamificationResponse(gamificationDto);
         return ResponseEntity.ok(response);
-    }
-
-    @GetMapping
-    public ResponseEntity<List<GamificationResponse>> getAllGamifications() {
-        List<GamificationDto> gamifications = gamificationService.getAllGamification();
-        List<GamificationResponse> responses = gamifications.stream()
-                .map(gamificationDtoMapper::fromGamificationDtoToGamificationResponse)
-                .toList();
-        return ResponseEntity.ok(responses);
     }
 
     @DeleteMapping("/{id}")
