@@ -10,6 +10,4 @@ import java.util.UUID;
 @Repository
 public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
 
-    List<TaskEntity> findByUserIdAndIsCompleted(Long userId, boolean isCompleted);
-
 }

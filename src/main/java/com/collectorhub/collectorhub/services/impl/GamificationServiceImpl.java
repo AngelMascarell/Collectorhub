@@ -2,21 +2,20 @@ package com.collectorhub.collectorhub.services.impl;
 
 import com.collectorhub.collectorhub.controller.request.GamificationRequest;
 import com.collectorhub.collectorhub.controller.response.GamificationResponse;
-import com.collectorhub.collectorhub.database.entities.GamificationEntity;
-import com.collectorhub.collectorhub.database.entities.TaskEntity;
-import com.collectorhub.collectorhub.database.repositories.GamificationConditionRepository;
-import com.collectorhub.collectorhub.database.repositories.GamificationRepository;
-import com.collectorhub.collectorhub.database.repositories.TaskRepository;
+import com.collectorhub.collectorhub.database.entities.*;
+import com.collectorhub.collectorhub.database.repositories.*;
 import com.collectorhub.collectorhub.dto.GamificationConditionDto;
 import com.collectorhub.collectorhub.dto.GamificationDto;
 import com.collectorhub.collectorhub.dto.mappers.AbstractGamificationConditionDtoMapper;
 import com.collectorhub.collectorhub.dto.mappers.AbstractGamificationDtoMapper;
 import com.collectorhub.collectorhub.services.GamificationService;
+import com.collectorhub.collectorhub.services.UserTaskService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -35,6 +34,15 @@ public class GamificationServiceImpl implements GamificationService {
 
     @Autowired
     private TaskRepository taskRepository;
+
+    @Autowired
+    private UserTaskRepository userTaskRepository;
+
+    @Autowired
+    private UserTaskService userTaskService;
+
+    @Autowired
+    private UserGamificationRepository userGamificationRepository;
 
     @Autowired
     private AbstractGamificationDtoMapper gamificationDtoMapper;
@@ -74,11 +82,11 @@ public class GamificationServiceImpl implements GamificationService {
     }
 
     // Método para verificar si un usuario puede ganar una gamificación
-    public boolean checkIfUserCanEarnGamification(Long userId, UUID gamificationId) {
+    public boolean checkIfUserCanEarnGamification(UserEntity user, UUID gamificationId) {
         List<GamificationConditionDto> conditions = getConditionsForGamification(gamificationId);
 
         for (GamificationConditionDto condition : conditions) {
-            if (!isConditionMet(userId, condition)) {
+            if (!isConditionMet(user, condition)) {
                 return false; // Si alguna condición no se cumple, retorna falso
             }
         }
@@ -86,10 +94,10 @@ public class GamificationServiceImpl implements GamificationService {
     }
 
     // Método privado para verificar si se cumple una condición específica
-    private boolean isConditionMet(Long userId, GamificationConditionDto condition) {
+    private boolean isConditionMet(UserEntity user, GamificationConditionDto condition) {
         switch (condition.getType()) {
             case "TASK_COMPLETED":
-                int completedTasks = getCompletedTasksCount(userId);
+                int completedTasks = getCompletedTasksCount(user);
                 return completedTasks >= condition.getThreshold();
             // Agregar más condiciones aquí si es necesario
             default:
@@ -107,14 +115,52 @@ public class GamificationServiceImpl implements GamificationService {
 
 
     // Método para contar las tareas completadas por un usuario (simulado)
-    private int getCompletedTasksCount(Long userId) {
+    private int getCompletedTasksCount(UserEntity user) {
         // Contar las tareas completadas por el usuario
-        List<TaskEntity> completedTasks = taskRepository.findByUserIdAndIsCompleted(userId, true);
-        return completedTasks.size(); // Devuelve el número de tareas completadas
+        List<UserTaskEntity> completedUserTasks  = userTaskRepository.findByUserAndIsCompleted(user, true);
+        return completedUserTasks .size(); // Devuelve el número de tareas completadas
     }
 
     // Método para eliminar una gamificación por ID
     public void deleteGamification(UUID id) {
         gamificationRepository.deleteById(id);
     }
+
+    @Override
+    public void checkGamificationsForUser(UserEntity user) {
+        List<GamificationEntity> gamifications = gamificationRepository.findAll();
+
+        for (GamificationEntity gamification : gamifications) {
+            boolean conditionsMet = checkConditions(user, gamification.getConditions());
+            if (conditionsMet) {
+                // Lógica para premiar al usuario
+                awardGamificationToUser(user, gamification);
+            }
+        }
+    }
+
+    private boolean checkConditions(UserEntity user, List<GamificationConditionEntity> conditions) {
+        for (GamificationConditionEntity condition : conditions) {
+            // Lógica para comprobar la condición según su tipo y umbral
+            if (condition.getType().equals("TASK_COMPLETED")) {
+                int completedTasksCount = userTaskService.getCompletedTasksCount(user.getId());
+                if (completedTasksCount < condition.getThreshold()) {
+                    return false; // No se cumple esta condición
+                }
+            }
+            // Puedes agregar más condiciones aquí
+        }
+        return true; // Todas las condiciones se cumplen
+    }
+
+    private void awardGamificationToUser(UserEntity user, GamificationEntity gamification) {
+        UserGamificationEntity userGamification = UserGamificationEntity.builder()
+                .user(user)
+                .gamification(gamification)
+                .awardedAt(LocalDateTime.now())
+                .build();
+
+        userGamificationRepository.save(userGamification);
+    }
+
 }

@@ -23,7 +23,7 @@ public class GamificationDto {
     private String imageUrl;
 
     @OneToMany(cascade = CascadeType.ALL)
-    private List<GamificationConditionDto> conditions; // Nuevas condiciones
+    private List<GamificationConditionDto> conditions;
 
     private LocalDateTime createdAt;
 

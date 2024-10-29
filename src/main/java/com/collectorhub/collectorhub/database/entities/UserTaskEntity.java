@@ -13,18 +13,23 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(name = "Task")
+@Table(name = "user_task")
 @Transactional
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TaskEntity extends BaseEntity {
+public class UserTaskEntity extends BaseEntity {
 
-    private String title;
-    private String description;
-    private boolean isCompleted;
-    private String taskType;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserEntity user;
+
+    @ManyToOne
+    @JoinColumn(name = "task_id", nullable = false)
+    private TaskEntity task;
+
+    private boolean isCompleted = false;
 
 }

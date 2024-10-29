@@ -12,19 +12,26 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.time.LocalDateTime;
+
 @Entity
-@Table(name = "Task")
+@Table(name = "user_gamification")
 @Transactional
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TaskEntity extends BaseEntity {
+public class UserGamificationEntity extends BaseEntity {
 
-    private String title;
-    private String description;
-    private boolean isCompleted;
-    private String taskType;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserEntity user;
+
+    @ManyToOne
+    @JoinColumn(name = "gamification_id", nullable = false)
+    private GamificationEntity gamification;
+
+    private LocalDateTime awardedAt;
 
 }

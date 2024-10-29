@@ -58,8 +58,9 @@ public class UserEntity extends BaseEntity implements UserDetails {
     )
     private List<MangaEntity> mangas;
 
-    @OneToMany(mappedBy = "user") // Relación inversa
-    private List<TaskEntity> tasks; // Colección de tareas asociadas
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<UserTaskEntity> userTasks;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

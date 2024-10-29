@@ -2,6 +2,8 @@ package com.collectorhub.collectorhub.services;
 
 import com.collectorhub.collectorhub.controller.request.GamificationRequest;
 import com.collectorhub.collectorhub.controller.response.GamificationResponse;
+import com.collectorhub.collectorhub.database.entities.GamificationConditionEntity;
+import com.collectorhub.collectorhub.database.entities.UserEntity;
 import com.collectorhub.collectorhub.dto.GamificationConditionDto;
 import com.collectorhub.collectorhub.dto.GamificationDto;
 import com.collectorhub.collectorhub.dto.GenreDto;
@@ -20,8 +22,12 @@ public interface GamificationService {
 
     public GamificationDto addConditionToGamification(UUID gamificationId, GamificationConditionDto condition);
 
-    public boolean checkIfUserCanEarnGamification(Long userId, UUID gamificationId);
+    public boolean checkIfUserCanEarnGamification(UserEntity user, UUID gamificationId);
 
     public void deleteGamification(UUID id);
+
+
+    public void checkGamificationsForUser(UserEntity user);
+
 
 }
