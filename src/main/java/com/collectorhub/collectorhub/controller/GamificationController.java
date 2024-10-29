@@ -52,7 +52,7 @@ public class GamificationController {
         return ResponseEntity.ok().body(image);
     }
 
-    @PostMapping
+    @PostMapping("/new")
     public ResponseEntity<GamificationResponse> createGamification(@Valid @RequestBody GamificationRequest gamificationRequest) {
         GamificationDto createdGamification = gamificationService.createGamification(gamificationRequest);
         GamificationResponse response = gamificationDtoMapper.fromGamificationDtoToGamificationResponse(createdGamification);

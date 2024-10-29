@@ -53,9 +53,25 @@ public class GamificationServiceImpl implements GamificationService {
 
     // Método para crear una nueva gamificación
     public GamificationDto createGamification(GamificationRequest gamification) {
-        gamificationRepository.save(gamificationDtoMapper.fromGamificationDtoToGamificationEntity(gamificationDtoMapper.fromGamificationRequestToGamificationDto(gamification)));
-        return gamificationDtoMapper.fromGamificationRequestToGamificationDto(gamification);
+        // Primero, mapea a DTO
+        GamificationDto gamificationDto = gamificationDtoMapper.fromGamificationRequestToGamificationDto(gamification);
+
+        // Mapea a Entity
+        GamificationEntity entity = gamificationDtoMapper.fromGamificationDtoToGamificationEntity(gamificationDto);
+
+        // Asegúrate de que las condiciones sean nuevas
+        for (GamificationConditionEntity condition : entity.getConditions()) {
+            condition.setId(null); // Asegúrate de que el ID sea null para evitar problemas de entidades "detached"
+        }
+
+        // Guarda la entidad, lo que también guarda las condiciones nuevas
+        gamificationRepository.save(entity);
+
+        // Finalmente, devuelve el DTO mapeado
+        return gamificationDto;
     }
+
+
 
     // Método para obtener una gamificación por ID
     public Optional<GamificationDto> getGamificationById(UUID id) {

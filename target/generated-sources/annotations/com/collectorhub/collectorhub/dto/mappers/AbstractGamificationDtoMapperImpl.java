@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-10-29T14:26:56+0100",
+    date = "2024-10-29T16:07:32+0100",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.10 (Oracle Corporation)"
 )
 @Component
@@ -63,6 +63,10 @@ public class AbstractGamificationDtoMapperImpl implements AbstractGamificationDt
         gamificationDto.title( gamificationRequest.getTitle() );
         gamificationDto.description( gamificationRequest.getDescription() );
         gamificationDto.imageUrl( gamificationRequest.getImageUrl() );
+        List<GamificationConditionDto> list = gamificationRequest.getConditions();
+        if ( list != null ) {
+            gamificationDto.conditions( new ArrayList<GamificationConditionDto>( list ) );
+        }
 
         return gamificationDto.build();
     }
@@ -79,6 +83,10 @@ public class AbstractGamificationDtoMapperImpl implements AbstractGamificationDt
         gamificationResponse.title( gamificationDto.getTitle() );
         gamificationResponse.description( gamificationDto.getDescription() );
         gamificationResponse.imageUrl( gamificationDto.getImageUrl() );
+        List<GamificationConditionDto> list = gamificationDto.getConditions();
+        if ( list != null ) {
+            gamificationResponse.conditions( new ArrayList<GamificationConditionDto>( list ) );
+        }
 
         return gamificationResponse.build();
     }
@@ -127,6 +135,10 @@ public class AbstractGamificationDtoMapperImpl implements AbstractGamificationDt
         gamificationResponse.title( gamificationRequest.getTitle() );
         gamificationResponse.description( gamificationRequest.getDescription() );
         gamificationResponse.imageUrl( gamificationRequest.getImageUrl() );
+        List<GamificationConditionDto> list = gamificationRequest.getConditions();
+        if ( list != null ) {
+            gamificationResponse.conditions( new ArrayList<GamificationConditionDto>( list ) );
+        }
 
         return gamificationResponse.build();
     }
