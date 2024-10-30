@@ -32,4 +32,7 @@ public class MangaRequest implements Serializable {
     @JsonProperty(value = "completed")
     private boolean completed;
 
+    @JsonProperty(value = "imageUrl")
+    private String imageUrl;
+
 }

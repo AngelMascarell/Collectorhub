@@ -44,5 +44,6 @@ public class MangaEntity extends BaseEntity {
     @ManyToMany(mappedBy = "mangas")
     private List<MangaListEntity> listas = new ArrayList<>();
 
+    private String imageUrl;
 
 }

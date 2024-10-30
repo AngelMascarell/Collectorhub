@@ -54,6 +54,10 @@ public interface AbstractUserDtoMapper {
             userResponse.setTasks(userDto.getTasks());
         }
 
+        if (userDto.getProfileImageUrl() != null) {
+            userResponse.setProfileImageUrl(userDto.getProfileImageUrl());
+        }
+
         return userResponse;
     }
 

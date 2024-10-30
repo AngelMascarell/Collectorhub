@@ -42,6 +42,8 @@ public class UserEntity extends BaseEntity implements UserDetails {
 
     private LocalDate premiumEndDate = null;
 
+    private String profileImageUrl;
+
     @ManyToOne
     @JoinTable(
             name = "user_role",

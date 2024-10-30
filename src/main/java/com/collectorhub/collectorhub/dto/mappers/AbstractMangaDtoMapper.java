@@ -22,8 +22,10 @@ public interface AbstractMangaDtoMapper {
         mangaDto.setId(manga.getId());
         mangaDto.setTitle(manga.getTitle());
         mangaDto.setAuthor(manga.getAuthor());
+        mangaDto.setChapters(manga.getChapters());
+        mangaDto.setCompleted(manga.isCompleted());
+        mangaDto.setImageUrl(manga.getImageUrl());
 
-        // Asegúrate de que estás asignando el genreId correctamente
         if (manga.getGenre() != null) {
             mangaDto.setGenreId(manga.getGenre().getId());
         }

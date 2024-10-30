@@ -27,6 +27,8 @@ public class UserDto {
 
     private LocalDate premiumEndDate = null;
 
+    private String profileImageUrl;
+
     private RoleDto role;
 
     private List<TaskDto> tasks;

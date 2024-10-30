@@ -69,6 +69,7 @@ public class MangaServiceImpl implements MangaService {
                 .completed(mangaDto.isCompleted())
                 .chapters(mangaDto.getChapters())
                 .title(mangaDto.getTitle())
+                .imageUrl(mangaDto.getImageUrl())
                 .build();
 
         // Comprobar si el genreId no es nulo y asociarlo a la entidad de manga

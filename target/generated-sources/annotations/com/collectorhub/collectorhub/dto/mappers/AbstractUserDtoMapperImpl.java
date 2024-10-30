@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-10-29T16:07:32+0100",
+    date = "2024-10-30T16:08:00+0100",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.10 (Oracle Corporation)"
 )
 @Component
@@ -38,6 +38,7 @@ public class AbstractUserDtoMapperImpl implements AbstractUserDtoMapper {
         userDto.mangas( mangaEntityListToMangaDtoList( userEntity.getMangas() ) );
         userDto.premiumStartDate( userEntity.getPremiumStartDate() );
         userDto.premiumEndDate( userEntity.getPremiumEndDate() );
+        userDto.profileImageUrl( userEntity.getProfileImageUrl() );
         userDto.role( roleEntityToRoleDto( userEntity.getRole() ) );
 
         return userDto.build();
@@ -62,6 +63,7 @@ public class AbstractUserDtoMapperImpl implements AbstractUserDtoMapper {
         }
         userDto.premiumStartDate( userRequest.getPremiumStartDate() );
         userDto.premiumEndDate( userRequest.getPremiumEndDate() );
+        userDto.profileImageUrl( userRequest.getProfileImageUrl() );
 
         return userDto.build();
     }
@@ -82,6 +84,7 @@ public class AbstractUserDtoMapperImpl implements AbstractUserDtoMapper {
         userEntity.registerDate( userDto.getRegisterDate() );
         userEntity.premiumStartDate( userDto.getPremiumStartDate() );
         userEntity.premiumEndDate( userDto.getPremiumEndDate() );
+        userEntity.profileImageUrl( userDto.getProfileImageUrl() );
         userEntity.role( roleDtoToRoleEntity( userDto.getRole() ) );
         userEntity.mangas( mangaDtoListToMangaEntityList( userDto.getMangas() ) );
 
@@ -114,6 +117,7 @@ public class AbstractUserDtoMapperImpl implements AbstractUserDtoMapper {
         mangaDto.author( mangaEntity.getAuthor() );
         mangaDto.chapters( mangaEntity.getChapters() );
         mangaDto.completed( mangaEntity.isCompleted() );
+        mangaDto.imageUrl( mangaEntity.getImageUrl() );
 
         return mangaDto.build();
     }
@@ -169,6 +173,7 @@ public class AbstractUserDtoMapperImpl implements AbstractUserDtoMapper {
         mangaEntity.author( mangaDto.getAuthor() );
         mangaEntity.chapters( mangaDto.getChapters() );
         mangaEntity.completed( mangaDto.isCompleted() );
+        mangaEntity.imageUrl( mangaDto.getImageUrl() );
 
         return mangaEntity.build();
     }

@@ -27,4 +27,7 @@ public class MangaDto {
     private int chapters;
 
     private boolean completed;
+
+    private String imageUrl;
+
 }

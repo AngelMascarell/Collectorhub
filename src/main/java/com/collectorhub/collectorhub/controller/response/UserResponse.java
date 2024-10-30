@@ -54,4 +54,7 @@ public class UserResponse implements Serializable {
     @JsonProperty(value = "tasks")
     private List<TaskDto> tasks;
 
+    @JsonProperty(value = "profileImageUrl")
+    private String profileImageUrl;
+
 }

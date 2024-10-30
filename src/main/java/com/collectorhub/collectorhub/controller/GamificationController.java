@@ -37,29 +37,26 @@ public class GamificationController {
 
     @PostMapping("/upload-image")
     public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) throws IOException {
-        String filename = UUID.randomUUID() + "_" + file.getOriginalFilename(); // Evitar duplicados
+        String filename = UUID.randomUUID() + "_" + file.getOriginalFilename();
         Path filePath = Paths.get(uploadDir + filename);
 
-        Files.createDirectories(filePath.getParent()); // Crea el directorio si no existe
-        file.transferTo(filePath); // Guarda el archivo en el servidor
+        Files.createDirectories(filePath.getParent());
+        file.transferTo(filePath);
 
-        String fileUrl = "/gamification/images/" + filename; // URL de acceso a la imagen
+        String fileUrl = "/gamification/images/" + filename;
         return ResponseEntity.ok(fileUrl);
     }
 
     @GetMapping("/images/{filename}")
     public ResponseEntity<byte[]> getImage(@PathVariable String filename) throws IOException {
-        // Define el directorio donde se encuentran las imágenes
         Path filePath = Paths.get(uploadDir + filename);
 
-        // Verifica si el archivo existe
         if (!Files.exists(filePath)) {
-            return ResponseEntity.notFound().build(); // Retorna 404 si la imagen no se encuentra
+            return ResponseEntity.notFound().build();
         }
 
         byte[] image = Files.readAllBytes(filePath);
 
-        // Determina el tipo de contenido (por ejemplo, "image/jpeg", "image/png")
         String contentType = Files.probeContentType(filePath);
 
         return ResponseEntity.ok()

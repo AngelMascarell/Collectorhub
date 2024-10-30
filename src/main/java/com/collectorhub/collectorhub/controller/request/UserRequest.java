@@ -46,4 +46,7 @@ public class UserRequest implements Serializable {
     @JsonProperty(value = "premiumEndDate")
     private LocalDate premiumEndDate;
 
+    @JsonProperty(value = "profileImageUrl")
+    private String profileImageUrl;
+
 }
