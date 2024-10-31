@@ -119,18 +119,15 @@ public class UserServiceImpl implements UserService {
     }
 
     public List<UserDto> filterUsers(UserFilterRequest filter) {
-        // Asegúrate de que filter no sea null
         if (filter == null) {
             throw new IllegalArgumentException("El filtro no puede ser nulo.");
         }
 
-        // Obtener todos los usuarios
         List<UserEntity> allUsers = userRepository.findAll();
         List<UserDto> allDtoUsers = userDtoMapper.fromUserEntityListToUserDtoList(allUsers);
 
         System.out.println("Número de usuarios encontrados: " + allUsers.size());
 
-        // Filtrar usuarios
         List<UserDto> filteredUsers = allDtoUsers.stream()
                 .filter(user ->
                         // Comprobación del nombre de usuario

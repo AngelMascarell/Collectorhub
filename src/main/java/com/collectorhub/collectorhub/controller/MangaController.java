@@ -3,8 +3,11 @@ package com.collectorhub.collectorhub.controller;
 import com.collectorhub.collectorhub.controller.request.MangaRequest;
 import com.collectorhub.collectorhub.controller.response.MangaResponse;
 import com.collectorhub.collectorhub.controller.response.ObtainMangasResponse;
+import com.collectorhub.collectorhub.database.entities.MangaEntity;
+import com.collectorhub.collectorhub.dto.MangaDexResponseDto;
 import com.collectorhub.collectorhub.dto.MangaDto;
 import com.collectorhub.collectorhub.dto.mappers.AbstractMangaDtoMapper;
+import com.collectorhub.collectorhub.services.MangaDexService;
 import com.collectorhub.collectorhub.services.MangaService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +29,9 @@ public class MangaController {
 
     @Autowired
     private AbstractMangaDtoMapper mangaDtoMapper;
+
+    @Autowired
+    private MangaDexService mangaDexService;
 
     @PostMapping
     public ResponseEntity<MangaResponse> createManga(@Valid @RequestBody MangaRequest mangaRequest) {
@@ -68,6 +74,24 @@ public class MangaController {
     public ResponseEntity<Long> getCountUsers() {
         long mangaCount = mangaService.countAllMangas();
         return ResponseEntity.ok(mangaCount);
+    }
+
+
+    //TODO:MANGA DEX ENDPOINTS
+
+    @GetMapping("/mangadex/{id}")
+    public ResponseEntity<MangaDexResponseDto> getMangaById(@PathVariable("id") String mangaId) {
+        MangaDexResponseDto manga = mangaDexService.getMangaById(mangaId);
+        if (manga == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(manga, HttpStatus.OK);
+    }
+
+    @PostMapping("/mangadex/{id}/save")
+    public ResponseEntity<MangaEntity> saveManga(@PathVariable("id") String mangaId) {
+        MangaEntity savedManga = mangaDexService.saveManga(mangaId);
+        return new ResponseEntity<>(savedManga, HttpStatus.CREATED);
     }
 
 
