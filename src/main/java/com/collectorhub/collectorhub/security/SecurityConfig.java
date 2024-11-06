@@ -29,7 +29,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable) // Deshabilitar CSRF
                 .authorizeHttpRequests(authRequest ->
                         authRequest
-                                .requestMatchers("/auth/**", "/gamification/images/**", "/manga/mangadex/**").permitAll() // Permitir acceso a los endpoints específicos
+                                .requestMatchers("/auth/**", "/gamification/images/**", "/manga/mangadex/**", "/swagger-ui/**").permitAll() // Permitir acceso a los endpoints específicos
                                 .anyRequest().authenticated() // Requiere autenticación para cualquier otro request
                 )
                 .sessionManagement(sessionManager ->
