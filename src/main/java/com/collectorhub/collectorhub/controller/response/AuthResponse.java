@@ -1,6 +1,7 @@
 package com.collectorhub.collectorhub.controller.response;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 @Builder
 public class AuthResponse {
 
+    @JsonProperty(value = "accessToken")
     private String token;
 
 }
