@@ -150,24 +150,62 @@ public class MangaServiceImpl implements MangaService {
 
     @Override
     public List<MangaDto> findMangasByIds(List<Long> mangaIds) {
-        // Aquí buscamos directamente usando los Longs
         List<MangaEntity> mangaEntities = mangaRepository.findAllByIdIn(mangaIds);
 
-        // Convertir las entidades de manga a MangaDto
         return mangaEntities.stream()
                 .map(mangaDtoMapper::fromMangaEntityToMangaDto)
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<MangaDto> getCompletedMangas() {
+        return mangaRepository.findByCompletedTrue()
+                .stream()
+                .map(mangaDtoMapper::fromMangaEntityToMangaDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MangaDto> getUnder100Mangas() {
+        return mangaRepository.findByChaptersLessThanEqual(100)
+                .stream()
+                .map(mangaDtoMapper::fromMangaEntityToMangaDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MangaDto> getPersonalizedMangas(Long userId) {
+        // Obtén todos los mangas del usuario
+        List<MangaEntity> mangas = mangaRepository.findByPropietarios_Id(userId);
+
+        // Cuenta la frecuencia de cada autor
+        Map<String, Long> authorCount = mangas.stream()
+                .collect(Collectors.groupingBy(MangaEntity::getAuthor, Collectors.counting()));
+
+        // Ordena los autores por cantidad y selecciona los dos más representados
+        List<String> topAuthors = authorCount.entrySet().stream()
+                .sorted((entry1, entry2) -> Long.compare(entry2.getValue(), entry1.getValue()))
+                .limit(2)
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+
+        // Devuelve mangas de los dos autores más representados
+        List<MangaEntity> filteredMangas = mangas.stream()
+                .filter(manga -> topAuthors.contains(manga.getAuthor()))
+                .collect(Collectors.toList());
+
+        // Mapea las entidades a DTOs antes de devolverlas
+        return mangaDtoMapper.fromMangaEntityListToMangaDtoList(filteredMangas);
+    }
+
     private List<Long> uuidToLong(UUID uuid) {
         if (uuid == null) {
-            return Arrays.asList(null, null); // Manejo de nulos
+            return Arrays.asList(null, null);
         }
         return Arrays.asList(uuid.getMostSignificantBits(), uuid.getLeastSignificantBits());
     }
 
     public UUID longToUuid(Long id) {
-        // Lógica para convertir Long a UUID
         return UUID.nameUUIDFromBytes(Long.toString(id).getBytes());
     }
 }

@@ -4,6 +4,7 @@ import com.collectorhub.collectorhub.database.entities.MangaEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,11 +19,16 @@ public interface MangaRepository extends JpaRepository<MangaEntity, UUID> {
 
     List<MangaEntity> findByChapters(int chapters);
 
-    List<MangaEntity> findByCompletedTrue();
-
+    List<MangaEntity> findByChaptersLessThanEqual(int maxChapters);
     MangaEntity findById(Long UUID);
 
     boolean existsByTitle(String tittle);
 
     List<MangaEntity> findAllByIdIn(List<Long> uuidList);
+
+    List<MangaEntity> findByCompletedTrue();
+
+    List<MangaEntity> findByPropietarios_Id(Long userId);
+
+    List<MangaEntity> findByAuthorIn(List<String> topAuthors);
 }

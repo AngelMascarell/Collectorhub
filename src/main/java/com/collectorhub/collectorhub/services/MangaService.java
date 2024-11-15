@@ -33,5 +33,11 @@ public interface MangaService {
 
     public long countAllMangas();
 
-    List<MangaDto> findMangasByIds(List<Long> mangaIds);
+    public List<MangaDto> findMangasByIds(List<Long> mangaIds);
+
+    public List<MangaDto> getCompletedMangas();
+
+    public List<MangaDto> getUnder100Mangas();
+
+    public List<MangaDto> getPersonalizedMangas(Long userId);
 }

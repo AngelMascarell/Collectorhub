@@ -52,6 +52,27 @@ public class MangaController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/getCompleted")
+    public ResponseEntity<ObtainMangasResponse> getCompletedMangas() {
+        List<MangaDto> completedMangas = mangaService.getCompletedMangas();
+        ObtainMangasResponse response = mangaDtoMapper.fromMangaDtoListToObtainMangaResponse(completedMangas);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/getUnder100")
+    public ResponseEntity<ObtainMangasResponse> getUnder100ChapterMangas() {
+        List<MangaDto> completedMangas = mangaService.getUnder100Mangas();
+        ObtainMangasResponse response = mangaDtoMapper.fromMangaDtoListToObtainMangaResponse(completedMangas);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/personalized/{userId}")
+    public ResponseEntity<ObtainMangasResponse> getPersonalizedMangas(@PathVariable Long userId) {
+        List<MangaDto> personalizedMangas = mangaService.getPersonalizedMangas(userId);
+        ObtainMangasResponse response = mangaDtoMapper.fromMangaDtoListToObtainMangaResponse(personalizedMangas);
+        return ResponseEntity.ok(response);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<MangaResponse> updateManga(@PathVariable UUID id, @RequestBody MangaRequest mangaRequest) {
         MangaResponse updatedManga = mangaDtoMapper.fromMangaDtoToMangaResponse(mangaService.updateManga(mangaDtoMapper.fromMangaRequestToMangaDto(mangaRequest), id));

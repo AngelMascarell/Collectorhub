@@ -43,13 +43,20 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse login(LoginRequest loginRequest) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
+        );
+
         UserEntity user = userRepository.findByUsername(loginRequest.getUsername());
+
         String token = jwtService.getToken(user);
+
         return AuthResponse.builder()
                 .token(token)
+                .userId(user.getId())
                 .build();
     }
+
 
     @Override
     public AuthResponse register(RegisterRequest registerRequest) {
