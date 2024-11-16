@@ -40,7 +40,7 @@ public class MangaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MangaResponse> getMangaById(@PathVariable UUID id) {
+    public ResponseEntity<MangaResponse> getMangaById(@PathVariable Long id) {
         MangaResponse manga = mangaDtoMapper.fromMangaDtoToMangaResponse(mangaService.getMangaById(id));
         return ResponseEntity.ok(manga);
     }

@@ -21,7 +21,7 @@ public interface MangaService {
 
     public MangaDto createManga(MangaDto manga);
 
-    public MangaDto getMangaById(UUID id);
+    public MangaDto getMangaById(Long id);
 
     public List<MangaDto> getAllMangas();
 

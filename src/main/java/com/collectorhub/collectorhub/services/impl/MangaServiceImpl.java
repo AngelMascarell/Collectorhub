@@ -90,8 +90,8 @@ public class MangaServiceImpl implements MangaService {
 
 
     @Override
-    public MangaDto getMangaById(UUID id) {
-        Optional<MangaEntity> mangaOptional = mangaRepository.findById(id);
+    public MangaDto getMangaById(Long id) {
+        Optional<MangaEntity> mangaOptional = Optional.ofNullable(mangaRepository.findById(id));
         if (mangaOptional.isPresent()) {
             MangaEntity mangaEntity = mangaOptional.get();
             return mapEntityToDto(mangaEntity);
