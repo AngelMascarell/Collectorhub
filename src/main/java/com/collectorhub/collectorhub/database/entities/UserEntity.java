@@ -52,7 +52,7 @@ public class UserEntity extends BaseEntity implements UserDetails {
     )
     private RoleEntity role;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_mangas",
             joinColumns = @JoinColumn(name = "usuario_id"),

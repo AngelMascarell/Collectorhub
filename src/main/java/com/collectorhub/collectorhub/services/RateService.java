@@ -18,4 +18,6 @@ public interface RateService {
     public List<RateDto> getAllRates();
 
     public List<RateDto> getAllRatesByMangaId(Long mangaId);
+
+    public int getAverageRateByMangaId(Long mangaId);
 }

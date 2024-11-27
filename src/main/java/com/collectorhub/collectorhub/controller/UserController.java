@@ -2,9 +2,13 @@ package com.collectorhub.collectorhub.controller;
 
 import com.collectorhub.collectorhub.controller.request.UserFilterRequest;
 import com.collectorhub.collectorhub.controller.request.UserRequest;
+import com.collectorhub.collectorhub.controller.response.MangaResponseList;
 import com.collectorhub.collectorhub.controller.response.UserResponse;
 import com.collectorhub.collectorhub.controller.response.UserResponseList;
+import com.collectorhub.collectorhub.database.entities.UserEntity;
+import com.collectorhub.collectorhub.dto.MangaDto;
 import com.collectorhub.collectorhub.dto.UserDto;
+import com.collectorhub.collectorhub.dto.mappers.AbstractMangaDtoMapper;
 import com.collectorhub.collectorhub.dto.mappers.AbstractUserDtoMapper;
 import com.collectorhub.collectorhub.services.UserService;
 import jakarta.validation.Valid;
@@ -12,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,6 +34,31 @@ public class UserController {
 
     @Autowired
     private AbstractUserDtoMapper userDtoMapper;
+
+    @Autowired
+    private AbstractMangaDtoMapper mangaDtoMapper;
+
+    @PostMapping("/add-manga/{mangaId}")
+    public ResponseEntity<String> addMangaToUser(@PathVariable Long mangaId, @AuthenticationPrincipal UserEntity user) {
+        if (user == null) {
+            return ResponseEntity.status(401).body("User not authenticated");
+        }
+
+        return userService.addMangaToUser(user, mangaId);
+    }
+
+    @GetMapping("/mangas")
+    public ResponseEntity<MangaResponseList> getUserMangas(@AuthenticationPrincipal UserEntity user) {
+        Long userId = user.getId();
+        List<MangaDto> userMangas = userService.getUserMangas(userId);
+
+        if (userMangas.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        MangaResponseList mangaResponseList = new MangaResponseList(mangaDtoMapper.fromMangaDtoListToMangaResponseList(userMangas));
+        return ResponseEntity.ok(mangaResponseList);
+    }
 
     @PostMapping("/new")
     public ResponseEntity<UserResponse> createUser(@Valid @RequestBody UserRequest userRequest) {

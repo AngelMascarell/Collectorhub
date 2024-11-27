@@ -1,19 +1,28 @@
 package com.collectorhub.collectorhub.services.impl;
 
 import com.collectorhub.collectorhub.controller.request.UserFilterRequest;
+import com.collectorhub.collectorhub.database.entities.MangaEntity;
 import com.collectorhub.collectorhub.database.entities.UserEntity;
+import com.collectorhub.collectorhub.database.repositories.MangaRepository;
 import com.collectorhub.collectorhub.database.repositories.UserRepository;
+import com.collectorhub.collectorhub.dto.MangaDto;
 import com.collectorhub.collectorhub.dto.UserDto;
+import com.collectorhub.collectorhub.dto.mappers.AbstractMangaDtoMapper;
 import com.collectorhub.collectorhub.dto.mappers.AbstractUserDtoMapper;
 import com.collectorhub.collectorhub.services.UserService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -24,9 +33,13 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
-
+    @Autowired
+    private MangaRepository mangaRepository;
     @Autowired
     private AbstractUserDtoMapper userDtoMapper;
+
+    @Autowired
+    private AbstractMangaDtoMapper mangaDtoMapper;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -82,7 +95,7 @@ public class UserServiceImpl implements UserService {
     public long countUsersSubscribed() {
         List<UserEntity> totalUsers = userRepository.findAll();
         long usersSubscribed = 0;
-        for(UserEntity user: totalUsers) {
+        for (UserEntity user : totalUsers) {
             if (user.isPremium()) {
                 usersSubscribed += 1;
             }
@@ -150,11 +163,40 @@ public class UserServiceImpl implements UserService {
         return filteredUsers;
     }
 
+    @Transactional
+    @Override
+    public ResponseEntity<String> addMangaToUser(UserEntity user, Long mangaId) {
+        Hibernate.initialize(user.getMangas());
+        Optional<MangaEntity> mangaOpt = Optional.ofNullable(mangaRepository.findById(mangaId));
 
+        if (mangaOpt.isPresent()) {
+            MangaEntity manga = mangaOpt.get();
 
+            // Verifica si el usuario ya tiene el manga usando solo el ID
+            boolean alreadyHasManga = user.getMangas().stream()
+                    .anyMatch(m -> m.getId().equals(manga.getId()));
 
+            if (alreadyHasManga) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("El usuario ya tiene este manga en su colección.");
+            }
 
+            // Añade el manga a la lista y guarda al usuario
+            user.getMangas().add(manga);
+            userRepository.save(user);
+            return ResponseEntity.ok("Manga añadido a la colección del usuario.");
+        } else {
+            // Si el manga no se encuentra en la base de datos
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("El manga especificado no fue encontrado.");
+        }
+    }
 
+    @Override
+    public List<MangaDto> getUserMangas(Long userId) {
+        UserEntity user = userRepository.findById(userId);
+        return mangaDtoMapper.fromMangaEntityListToMangaDtoList(user.getMangas());
+    }
 
 
 }

@@ -2,6 +2,7 @@ package com.collectorhub.collectorhub.dto.mappers;
 
 import com.collectorhub.collectorhub.controller.request.RateRequest;
 import com.collectorhub.collectorhub.controller.response.RateResponse;
+import com.collectorhub.collectorhub.controller.response.RateResponseList;
 import com.collectorhub.collectorhub.database.entities.RateEntity;
 import com.collectorhub.collectorhub.dto.RateDto;
 import org.mapstruct.Mapper;
@@ -19,6 +20,7 @@ public interface AbstractRateDtoMapper {
 
     RateResponse fromRateDtoToRateResponse(RateDto rateDto);
 
+    //RateResponseList fromRateDtoListToRateResponseList(List<RateDto> rateDtoList);
     List<RateResponse> fromRateDtoListToRateResponseList(List<RateDto> rateDtoList);
 
     RateEntity fromRateDtoToRateEntity(RateDto rateDto);

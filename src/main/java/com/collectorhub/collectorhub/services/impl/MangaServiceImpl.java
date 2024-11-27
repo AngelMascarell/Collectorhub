@@ -108,6 +108,7 @@ public class MangaServiceImpl implements MangaService {
                 .genreId(mangaEntity.getGenre() != null ? mangaEntity.getGenre().getId() : null)
                 .chapters(mangaEntity.getChapters())
                 .completed(mangaEntity.isCompleted())
+                .imageUrl(mangaEntity.getImageUrl())
                 //.propietarios(mangaEntity.getPropietarios())
                 .build();
     }

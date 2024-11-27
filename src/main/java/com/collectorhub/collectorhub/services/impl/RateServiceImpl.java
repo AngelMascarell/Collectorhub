@@ -96,4 +96,16 @@ public class RateServiceImpl implements RateService {
 
         return rateDtoMapper.fromRateEntityListToRateDtoList(ratesForManga);
     }
+
+    @Override
+    public int getAverageRateByMangaId(Long mangaId) {
+        List<RateEntity> ratesForManga = rateRepository.findByMangaId(mangaId);
+        return (int) Math.round(
+                ratesForManga.stream()
+                        .mapToInt(RateEntity::getRate)
+                        .average()
+                        .orElse(0)
+        );
+    }
+
 }

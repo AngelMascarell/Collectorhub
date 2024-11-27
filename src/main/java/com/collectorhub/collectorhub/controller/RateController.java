@@ -2,6 +2,8 @@ package com.collectorhub.collectorhub.controller;
 
 import com.collectorhub.collectorhub.controller.request.RateRequest;
 import com.collectorhub.collectorhub.controller.response.RateResponse;
+import com.collectorhub.collectorhub.controller.response.RateResponseList;
+import com.collectorhub.collectorhub.dto.RateDto;
 import com.collectorhub.collectorhub.dto.mappers.AbstractRateDtoMapper;
 import com.collectorhub.collectorhub.services.RateService;
 import jakarta.validation.Valid;
@@ -39,9 +41,10 @@ public class RateController {
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<RateResponse>> getAllRates() {
+    public ResponseEntity<RateResponseList> getAllRates() {
         List<RateResponse> allRates = rateDtoMapper.fromRateDtoListToRateResponseList(rateService.getAllRates());
-        return ResponseEntity.ok(allRates);
+        RateResponseList responseList = new RateResponseList(allRates);
+        return ResponseEntity.ok(responseList);
     }
 
     @PutMapping("/update/{id}")
@@ -54,6 +57,20 @@ public class RateController {
     public ResponseEntity<Void> deleteRate(@PathVariable UUID id) {
         rateService.deleteRate(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/manga/{mangaId}")
+    public ResponseEntity<RateResponseList> getRatesByMangaId(@PathVariable Long mangaId) {
+        List<RateDto> rateDtoList = rateService.getAllRatesByMangaId(mangaId);
+        List<RateResponse> responseList = rateDtoMapper.fromRateDtoListToRateResponseList(rateDtoList);
+        RateResponseList rateResponseList = new RateResponseList(responseList);
+        return ResponseEntity.ok(rateResponseList);
+    }
+
+    @GetMapping("/manga/{mangaId}/average")
+    public ResponseEntity<Integer> getAverageRateByMangaId(@PathVariable Long mangaId) {
+        int averageRate = rateService.getAverageRateByMangaId(mangaId);
+        return ResponseEntity.ok(averageRate);
     }
 
 }
