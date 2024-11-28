@@ -1,5 +1,6 @@
 package com.collectorhub.collectorhub.services.impl;
 
+import com.collectorhub.collectorhub.controller.response.RateResponse;
 import com.collectorhub.collectorhub.database.entities.MangaEntity;
 import com.collectorhub.collectorhub.database.entities.RateEntity;
 import com.collectorhub.collectorhub.database.entities.UserEntity;
@@ -15,7 +16,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -35,9 +38,20 @@ public class RateServiceImpl implements RateService {
     @Autowired
     private AbstractRateDtoMapper rateDtoMapper;
 
-    @Override
     public RateDto createRate(RateDto rateDto) {
-        RateEntity rateEntity = rateDtoMapper.fromRateDtoToRateEntity(rateDto);
+        UserEntity user = userRepository.findById(rateDto.getUserId());
+                //.orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
+
+        MangaEntity manga = mangaRepository.findById(rateDto.getMangaId());
+                //.orElseThrow(() -> new EntityNotFoundException("Manga no encontrado"));
+
+        RateEntity rateEntity = RateEntity.builder()
+                .user(user)
+                .manga(manga)
+                .rate(rateDto.getRate())
+                .comment(rateDto.getComment())
+                .date(rateDto.getDate() != null ? rateDto.getDate() : LocalDate.now())
+                .build();
 
         RateEntity savedRateEntity = rateRepository.save(rateEntity);
 
@@ -90,6 +104,8 @@ public class RateServiceImpl implements RateService {
         return rateDtoMapper.fromRateEntityListToRateDtoList(allRates);
     }
 
+    //TODO: REVISAR FUNCIONAMIENTO MANGA ID USER ID
+
     @Override
     public List<RateDto> getAllRatesByMangaId(Long mangaId) {
         List<RateEntity> ratesForManga = rateRepository.findByMangaId(mangaId);
@@ -107,5 +123,17 @@ public class RateServiceImpl implements RateService {
                         .orElse(0)
         );
     }
+
+    @Override
+    public boolean getReviewByUserAndManga(Long mangaId, Long userId) {
+        // Obtener las entidades de User y Manga
+        UserEntity user = userRepository.findById(userId);
+                //.orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        MangaEntity manga = mangaRepository.findById(mangaId);
+                //.orElseThrow(() -> new ResourceNotFoundException("Manga not found"));
+
+        return rateRepository.existsByUserAndManga(user, manga);
+    }
+
 
 }

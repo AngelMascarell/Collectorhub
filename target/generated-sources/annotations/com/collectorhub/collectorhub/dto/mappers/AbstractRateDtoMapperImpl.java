@@ -11,27 +11,11 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-11-27T17:58:31+0100",
+    date = "2024-11-28T15:36:00+0100",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.10 (Oracle Corporation)"
 )
 @Component
 public class AbstractRateDtoMapperImpl implements AbstractRateDtoMapper {
-
-    @Override
-    public RateDto fromRateEntityToRateDto(RateEntity rateEntity) {
-        if ( rateEntity == null ) {
-            return null;
-        }
-
-        RateDto.RateDtoBuilder rateDto = RateDto.builder();
-
-        rateDto.id( rateEntity.getId() );
-        rateDto.rate( rateEntity.getRate() );
-        rateDto.comment( rateEntity.getComment() );
-        rateDto.date( rateEntity.getDate() );
-
-        return rateDto.build();
-    }
 
     @Override
     public List<RateDto> fromRateEntityListToRateDtoList(List<RateEntity> rateEntityList) {

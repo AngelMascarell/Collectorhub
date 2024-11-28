@@ -3,6 +3,7 @@ package com.collectorhub.collectorhub.controller;
 import com.collectorhub.collectorhub.controller.request.RateRequest;
 import com.collectorhub.collectorhub.controller.response.RateResponse;
 import com.collectorhub.collectorhub.controller.response.RateResponseList;
+import com.collectorhub.collectorhub.database.entities.UserEntity;
 import com.collectorhub.collectorhub.dto.RateDto;
 import com.collectorhub.collectorhub.dto.mappers.AbstractRateDtoMapper;
 import com.collectorhub.collectorhub.services.RateService;
@@ -11,8 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,9 +32,20 @@ public class RateController {
     private AbstractRateDtoMapper rateDtoMapper;
 
     @PostMapping("/new")
-    public ResponseEntity<RateResponse> createRate(@Valid @RequestBody RateRequest rateRequest) {
-        RateResponse createdRate = rateDtoMapper.fromRateDtoToRateResponse(rateService.createRate(rateDtoMapper.fromRateRequestToRateDto(rateRequest)));
-        return new ResponseEntity<>(createdRate, HttpStatus.CREATED);
+    public ResponseEntity<RateResponse> createRate(@AuthenticationPrincipal UserEntity user, @RequestBody @Valid RateDto rateDto) {
+        rateDto.setUserId(user.getId());
+        rateDto.setDate(LocalDate.now());
+
+        RateDto createdRate = rateService.createRate(rateDto);
+
+        return ResponseEntity.ok(rateDtoMapper.fromRateDtoToRateResponse(createdRate));
+    }
+
+    @GetMapping("/user-review/{mangaId}")
+    public ResponseEntity<Boolean> getUserReview(@PathVariable Long mangaId, @AuthenticationPrincipal UserEntity user) {
+        boolean hasReviewed = rateService.getReviewByUserAndManga(mangaId, user.getId());
+
+        return ResponseEntity.ok(hasReviewed);
     }
 
     @GetMapping("/{id}")

@@ -1,5 +1,6 @@
 package com.collectorhub.collectorhub.services;
 
+import com.collectorhub.collectorhub.controller.response.RateResponse;
 import com.collectorhub.collectorhub.dto.RateDto;
 
 import java.util.List;
@@ -20,4 +21,6 @@ public interface RateService {
     public List<RateDto> getAllRatesByMangaId(Long mangaId);
 
     public int getAverageRateByMangaId(Long mangaId);
+
+    public boolean getReviewByUserAndManga(Long mangaId, Long userId);
 }
