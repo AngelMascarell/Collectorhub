@@ -126,7 +126,6 @@ public class RateServiceImpl implements RateService {
 
     @Override
     public boolean getReviewByUserAndManga(Long mangaId, Long userId) {
-        // Obtener las entidades de User y Manga
         UserEntity user = userRepository.findById(userId);
                 //.orElseThrow(() -> new ResourceNotFoundException("User not found"));
         MangaEntity manga = mangaRepository.findById(mangaId);

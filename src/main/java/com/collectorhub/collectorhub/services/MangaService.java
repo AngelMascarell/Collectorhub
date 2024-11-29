@@ -40,4 +40,6 @@ public interface MangaService {
     public List<MangaDto> getUnder100Mangas();
 
     public List<MangaDto> getPersonalizedMangas(Long userId);
+
+    MangaEntity findMangaByTittle(String name);
 }

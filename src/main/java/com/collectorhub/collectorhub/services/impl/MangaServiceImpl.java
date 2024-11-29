@@ -176,27 +176,27 @@ public class MangaServiceImpl implements MangaService {
 
     @Override
     public List<MangaDto> getPersonalizedMangas(Long userId) {
-        // Obtén todos los mangas del usuario
         List<MangaEntity> mangas = mangaRepository.findByPropietarios_Id(userId);
 
-        // Cuenta la frecuencia de cada autor
         Map<String, Long> authorCount = mangas.stream()
                 .collect(Collectors.groupingBy(MangaEntity::getAuthor, Collectors.counting()));
 
-        // Ordena los autores por cantidad y selecciona los dos más representados
         List<String> topAuthors = authorCount.entrySet().stream()
                 .sorted((entry1, entry2) -> Long.compare(entry2.getValue(), entry1.getValue()))
                 .limit(2)
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
 
-        // Devuelve mangas de los dos autores más representados
         List<MangaEntity> filteredMangas = mangas.stream()
                 .filter(manga -> topAuthors.contains(manga.getAuthor()))
                 .collect(Collectors.toList());
 
-        // Mapea las entidades a DTOs antes de devolverlas
         return mangaDtoMapper.fromMangaEntityListToMangaDtoList(filteredMangas);
+    }
+
+    @Override
+    public MangaEntity findMangaByTittle(String name) {
+        return mangaRepository.findByTitleIgnoreCase(name).orElse(null);
     }
 
     private List<Long> uuidToLong(UUID uuid) {

@@ -39,6 +39,16 @@ public class MangaController {
         return new ResponseEntity<>(createdManga, HttpStatus.CREATED);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<MangaResponse> searchMangaByName(@RequestParam String name) {
+        MangaEntity manga = mangaService.findMangaByTittle(name);
+        if (manga != null) {
+            return ResponseEntity.ok(mangaDtoMapper.fromMangaDtoToMangaResponse(mangaDtoMapper.fromMangaEntityToMangaDto(manga)));
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<MangaResponse> getMangaById(@PathVariable Long id) {
         MangaResponse manga = mangaDtoMapper.fromMangaDtoToMangaResponse(mangaService.getMangaById(id));
