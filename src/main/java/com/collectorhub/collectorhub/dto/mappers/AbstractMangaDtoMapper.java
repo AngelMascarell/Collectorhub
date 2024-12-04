@@ -60,6 +60,9 @@ public interface AbstractMangaDtoMapper {
             mangaDto.setGenreId(manga.getGenre().getId());
         }
 
+        mangaDto.setSynopsis(manga.getSynopsis());
+        mangaDto.setReleaseDate(manga.getReleaseDate());
+
         return mangaDto;
     }
 

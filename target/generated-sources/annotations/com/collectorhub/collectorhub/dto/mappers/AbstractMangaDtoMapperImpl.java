@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-11-27T17:58:31+0100",
+    date = "2024-12-04T17:15:40+0100",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.10 (Oracle Corporation)"
 )
 @Component
@@ -30,6 +30,8 @@ public class AbstractMangaDtoMapperImpl implements AbstractMangaDtoMapper {
         mangaDto.chapters( mangaRequest.getChapters() );
         mangaDto.completed( mangaRequest.isCompleted() );
         mangaDto.imageUrl( mangaRequest.getImageUrl() );
+        mangaDto.synopsis( mangaRequest.getSynopsis() );
+        mangaDto.releaseDate( mangaRequest.getReleaseDate() );
 
         return mangaDto.build();
     }
@@ -49,6 +51,8 @@ public class AbstractMangaDtoMapperImpl implements AbstractMangaDtoMapper {
         mangaResponse.chapters( manga.getChapters() );
         mangaResponse.completed( manga.isCompleted() );
         mangaResponse.imageUrl( manga.getImageUrl() );
+        mangaResponse.synopsis( manga.getSynopsis() );
+        mangaResponse.releaseDate( manga.getReleaseDate() );
 
         return mangaResponse.build();
     }

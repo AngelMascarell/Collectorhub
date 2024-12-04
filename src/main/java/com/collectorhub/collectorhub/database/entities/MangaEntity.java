@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,5 +46,11 @@ public class MangaEntity extends BaseEntity {
     private List<MangaListEntity> listas = new ArrayList<>();
 
     private String imageUrl;
+
+    @Column(name = "synopsis", length = 1000)
+    private String synopsis;
+
+    @Column(name = "release_date")
+    private LocalDate releaseDate;
 
 }

@@ -60,6 +60,13 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse register(RegisterRequest registerRequest) {
+        if (userRepository.existsByEmail(registerRequest.getEmail())) {
+            throw new IllegalArgumentException("Email is already in use.");
+        }
+
+        if (userRepository.existsByUsername(registerRequest.getUsername())) {
+            throw new IllegalArgumentException("Username is already in use.");
+        }
 
         RoleEntity role = roleRepository.findByName("USER");
 
@@ -83,6 +90,6 @@ public class AuthServiceImpl implements AuthService {
         return AuthResponse.builder()
                 .token(jwtService.getToken(user))
                 .build();
-
     }
+
 }

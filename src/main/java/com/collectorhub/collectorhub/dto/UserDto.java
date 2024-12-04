@@ -21,6 +21,8 @@ public class UserDto {
     private LocalDate registerDate;
     private List<MangaDto> mangas;
 
+    private List<MangaDto> desiredMangas;
+
     private boolean isPremium = false;
 
     private LocalDate premiumStartDate = null;

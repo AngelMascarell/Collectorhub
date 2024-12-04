@@ -60,6 +60,15 @@ public class UserEntity extends BaseEntity implements UserDetails {
     )
     private List<MangaEntity> mangas;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "users_desired_mangas",
+            joinColumns = @JoinColumn(name = "usuario_id"),
+            inverseJoinColumns = @JoinColumn(name = "manga_id")
+    )
+    private List<MangaEntity> desiredMangas;
+
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserTaskEntity> userTasks;
 

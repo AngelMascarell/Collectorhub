@@ -26,17 +26,17 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
-                .csrf(AbstractHttpConfigurer::disable) // Deshabilitar CSRF
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authRequest ->
                         authRequest
-                                .requestMatchers("/auth/**", "/gamification/images/**", "/manga/mangadex/**", "/swagger-ui/**").permitAll() // Permitir acceso a los endpoints específicos
-                                .anyRequest().authenticated() // Requiere autenticación para cualquier otro request
+                                .requestMatchers("/auth/**", "/auth/register", "/gamification/images/**", "/manga/mangadex/**", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                                .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManager ->
                         sessionManager
-                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Configurar sesión como stateless
-                .authenticationProvider(authProvider) // Configurar el proveedor de autenticación
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) // Añadir el filtro JWT
+                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authenticationProvider(authProvider)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 

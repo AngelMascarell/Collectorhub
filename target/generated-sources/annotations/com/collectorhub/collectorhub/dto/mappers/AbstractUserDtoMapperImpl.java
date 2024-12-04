@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-11-27T17:58:32+0100",
+    date = "2024-12-04T17:15:40+0100",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.10 (Oracle Corporation)"
 )
 @Component
@@ -36,6 +36,7 @@ public class AbstractUserDtoMapperImpl implements AbstractUserDtoMapper {
         userDto.birthdate( userEntity.getBirthdate() );
         userDto.registerDate( userEntity.getRegisterDate() );
         userDto.mangas( mangaEntityListToMangaDtoList( userEntity.getMangas() ) );
+        userDto.desiredMangas( mangaEntityListToMangaDtoList( userEntity.getDesiredMangas() ) );
         userDto.premiumStartDate( userEntity.getPremiumStartDate() );
         userDto.premiumEndDate( userEntity.getPremiumEndDate() );
         userDto.profileImageUrl( userEntity.getProfileImageUrl() );
@@ -87,6 +88,7 @@ public class AbstractUserDtoMapperImpl implements AbstractUserDtoMapper {
         userEntity.profileImageUrl( userDto.getProfileImageUrl() );
         userEntity.role( roleDtoToRoleEntity( userDto.getRole() ) );
         userEntity.mangas( mangaDtoListToMangaEntityList( userDto.getMangas() ) );
+        userEntity.desiredMangas( mangaDtoListToMangaEntityList( userDto.getDesiredMangas() ) );
 
         return userEntity.build();
     }
@@ -118,6 +120,8 @@ public class AbstractUserDtoMapperImpl implements AbstractUserDtoMapper {
         mangaDto.chapters( mangaEntity.getChapters() );
         mangaDto.completed( mangaEntity.isCompleted() );
         mangaDto.imageUrl( mangaEntity.getImageUrl() );
+        mangaDto.synopsis( mangaEntity.getSynopsis() );
+        mangaDto.releaseDate( mangaEntity.getReleaseDate() );
 
         return mangaDto.build();
     }
@@ -174,6 +178,8 @@ public class AbstractUserDtoMapperImpl implements AbstractUserDtoMapper {
         mangaEntity.chapters( mangaDto.getChapters() );
         mangaEntity.completed( mangaDto.isCompleted() );
         mangaEntity.imageUrl( mangaDto.getImageUrl() );
+        mangaEntity.synopsis( mangaDto.getSynopsis() );
+        mangaEntity.releaseDate( mangaDto.getReleaseDate() );
 
         return mangaEntity.build();
     }

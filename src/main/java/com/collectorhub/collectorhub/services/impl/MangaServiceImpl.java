@@ -2,8 +2,10 @@ package com.collectorhub.collectorhub.services.impl;
 
 import com.collectorhub.collectorhub.database.entities.GenreEntity;
 import com.collectorhub.collectorhub.database.entities.MangaEntity;
+import com.collectorhub.collectorhub.database.entities.UserEntity;
 import com.collectorhub.collectorhub.database.repositories.GenreRepository;
 import com.collectorhub.collectorhub.database.repositories.MangaRepository;
+import com.collectorhub.collectorhub.database.repositories.UserRepository;
 import com.collectorhub.collectorhub.dto.MangaDto;
 import com.collectorhub.collectorhub.dto.mappers.AbstractMangaDtoMapper;
 import com.collectorhub.collectorhub.services.MangaService;
@@ -24,6 +26,9 @@ public class MangaServiceImpl implements MangaService {
 
     @Autowired
     private MangaRepository mangaRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private AbstractMangaDtoMapper mangaDtoMapper;
@@ -58,21 +63,20 @@ public class MangaServiceImpl implements MangaService {
 
     @Override
     public MangaDto createManga(MangaDto mangaDto) {
-        // Comprobar si ya existe un manga con el mismo título
         if (mangaRepository.existsByTitle(mangaDto.getTitle())) {
             throw new IllegalArgumentException("A manga with this title already exists: " + mangaDto.getTitle());
         }
 
-        // Crear la entidad de manga a partir del DTO
         MangaEntity mangaEntity = MangaEntity.builder()
                 .author(mangaDto.getAuthor())
                 .completed(mangaDto.isCompleted())
                 .chapters(mangaDto.getChapters())
                 .title(mangaDto.getTitle())
                 .imageUrl(mangaDto.getImageUrl())
+                .releaseDate(mangaDto.getReleaseDate())
+                .synopsis(mangaDto.getSynopsis())
                 .build();
 
-        // Comprobar si el genreId no es nulo y asociarlo a la entidad de manga
         if (mangaDto.getGenreId() != null) {
             GenreEntity genre = genreRepository.findById(mangaDto.getGenreId());
             if (genre == null) {
@@ -81,10 +85,8 @@ public class MangaServiceImpl implements MangaService {
             mangaEntity.setGenre(genre);
         }
 
-        // Guardar la entidad de manga en la base de datos
         MangaEntity savedMangaEntity = mangaRepository.save(mangaEntity);
 
-        // Convertir la entidad guardada de vuelta a DTO y devolverla
         return mangaDtoMapper.fromMangaEntityToMangaDto(savedMangaEntity);
     }
 
@@ -109,6 +111,8 @@ public class MangaServiceImpl implements MangaService {
                 .chapters(mangaEntity.getChapters())
                 .completed(mangaEntity.isCompleted())
                 .imageUrl(mangaEntity.getImageUrl())
+                .synopsis(mangaEntity.getSynopsis())
+                .releaseDate(mangaEntity.getReleaseDate())
                 //.propietarios(mangaEntity.getPropietarios())
                 .build();
     }
@@ -176,23 +180,46 @@ public class MangaServiceImpl implements MangaService {
 
     @Override
     public List<MangaDto> getPersonalizedMangas(Long userId) {
-        List<MangaEntity> mangas = mangaRepository.findByPropietarios_Id(userId);
+        // Obtén los mangas del usuario desde la entidad de usuario
+        UserEntity user = userRepository.findById(userId);
+                //.orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
 
-        Map<String, Long> authorCount = mangas.stream()
+        List<MangaEntity> userCollection = user.getMangas(); // Asumiendo una relación Set<MangaEntity> mangas;
+
+        // Extraer los IDs de los mangas de la colección del usuario
+        Set<Long> userCollectionIds = userCollection.stream()
+                .map(MangaEntity::getId)
+                .collect(Collectors.toSet());
+
+        // Agrupa los mangas por autor basados en los que ya tiene el usuario
+        Map<String, Long> authorCount = userCollection.stream()
                 .collect(Collectors.groupingBy(MangaEntity::getAuthor, Collectors.counting()));
 
+        // Encuentra los autores más frecuentes
         List<String> topAuthors = authorCount.entrySet().stream()
                 .sorted((entry1, entry2) -> Long.compare(entry2.getValue(), entry1.getValue()))
                 .limit(2)
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
 
-        List<MangaEntity> filteredMangas = mangas.stream()
-                .filter(manga -> topAuthors.contains(manga.getAuthor()))
+        // Filtra los mangas que no están en la colección del usuario pero pertenecen a autores favoritos
+        List<MangaEntity> filteredMangas = mangaRepository.findAll().stream()
+                .filter(manga -> topAuthors.contains(manga.getAuthor())) // Autores favoritos
+                .filter(manga -> !userCollectionIds.contains(manga.getId())) // Excluir mangas del usuario
                 .collect(Collectors.toList());
+
+        // Si la lista está vacía, muestra todos los mangas que no tenga el usuario
+        if (filteredMangas.isEmpty()) {
+            filteredMangas = mangaRepository.findAll().stream()
+                    .filter(manga -> !userCollectionIds.contains(manga.getId())) // Excluir mangas del usuario
+                    .collect(Collectors.toList());
+        }
 
         return mangaDtoMapper.fromMangaEntityListToMangaDtoList(filteredMangas);
     }
+
+
+
 
     @Override
     public MangaEntity findMangaByTittle(String name) {

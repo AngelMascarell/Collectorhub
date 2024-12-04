@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Validated
@@ -38,5 +39,11 @@ public class MangaResponse implements Serializable {
 
     @JsonProperty(value = "imageUrl")
     private String imageUrl;
+
+    @JsonProperty(value = "synopsis")
+    private String synopsis;
+
+    @JsonProperty(value = "releaseDate")
+    private LocalDate releaseDate;
 
 }

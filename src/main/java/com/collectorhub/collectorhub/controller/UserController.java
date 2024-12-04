@@ -67,10 +67,18 @@ public class UserController {
     }
 
 
-    @GetMapping("getOne/{id}")
+    @GetMapping("/getOne/{id}")
     public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {
         UserResponse user = userDtoMapper.fromUserDtoToUserResponse(userService.findById(id));
         return ResponseEntity.ok(user);
+    }
+
+    @GetMapping("/getUserProfile")
+    public ResponseEntity<UserResponse> getUserById(@AuthenticationPrincipal UserEntity user) {
+        Long userId = user.getId();
+
+        UserResponse userResponse = userDtoMapper.fromUserDtoToUserResponse(userService.findById(userId));
+        return ResponseEntity.ok(userResponse);
     }
 
     @GetMapping("/{userId}/username")

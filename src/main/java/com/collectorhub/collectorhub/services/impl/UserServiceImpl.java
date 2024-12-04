@@ -70,6 +70,9 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("El correo electrónico ya está en uso.");
         }
 
+        String encodedPassword = passwordEncoder.encode(userDto.getPassword());
+        userDto.setPassword(encodedPassword);
+
         UserEntity userEntity = userDtoMapper.fromUserDtoToUserEntity(userDto);
 
         UserEntity savedUserEntity = userRepository.save(userEntity);
