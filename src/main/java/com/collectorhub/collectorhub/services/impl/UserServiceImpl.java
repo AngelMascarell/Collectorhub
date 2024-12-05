@@ -20,11 +20,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @Slf4j
@@ -146,19 +144,14 @@ public class UserServiceImpl implements UserService {
 
         List<UserDto> filteredUsers = allDtoUsers.stream()
                 .filter(user ->
-                        // Comprobación del nombre de usuario
                         (filter.getUsername() != null && user.getUsername() != null && user.getUsername().contains(filter.getUsername())) ||
 
-                                // Comprobación del correo electrónico
                                 (filter.getEmail() != null && user.getEmail() != null && user.getEmail().contains(filter.getEmail())) ||
 
-                                // Comprobación de la fecha de registro
                                 (filter.getRegisterDate() != null && user.getRegisterDate() != null && !user.getRegisterDate().isBefore(filter.getRegisterDate())) ||
 
-                                // Comprobación de la fecha de nacimiento
                                 (filter.getBirthdate() != null && user.getBirthdate() != null && !user.getBirthdate().isBefore(filter.getBirthdate())) ||
 
-                                // Comprobación del rol
                                 (filter.getRole() != null && user.getRole() != null && user.getRole().getName().equals(filter.getRole()))
                 )
                 .collect(Collectors.toList());
@@ -175,7 +168,6 @@ public class UserServiceImpl implements UserService {
         if (mangaOpt.isPresent()) {
             MangaEntity manga = mangaOpt.get();
 
-            // Verifica si el usuario ya tiene el manga usando solo el ID
             boolean alreadyHasManga = user.getMangas().stream()
                     .anyMatch(m -> m.getId().equals(manga.getId()));
 
@@ -184,12 +176,10 @@ public class UserServiceImpl implements UserService {
                         .body("El usuario ya tiene este manga en su colección.");
             }
 
-            // Añade el manga a la lista y guarda al usuario
             user.getMangas().add(manga);
             userRepository.save(user);
             return ResponseEntity.ok("Manga añadido a la colección del usuario.");
         } else {
-            // Si el manga no se encuentra en la base de datos
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("El manga especificado no fue encontrado.");
         }
@@ -199,6 +189,41 @@ public class UserServiceImpl implements UserService {
     public List<MangaDto> getUserMangas(Long userId) {
         UserEntity user = userRepository.findById(userId);
         return mangaDtoMapper.fromMangaEntityListToMangaDtoList(user.getMangas());
+    }
+
+    @Transactional
+    @Override
+    public ResponseEntity<String> addDesiredMangaToUser(UserEntity user, Long mangaId) {
+        Hibernate.initialize(user.getDesiredMangas());
+        Optional<MangaEntity> mangaOpt = Optional.ofNullable(mangaRepository.findById(mangaId));
+
+        if (mangaOpt.isPresent()) {
+            MangaEntity manga = mangaOpt.get();
+
+            boolean alreadyHasManga = user.getDesiredMangas().stream()
+                    .anyMatch(m -> m.getId().equals(manga.getId()))
+                    || user.getMangas().stream()
+                    .anyMatch(m -> m.getId().equals(manga.getId()));
+
+
+            if (alreadyHasManga) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("El usuario ya tiene este manga en su colección o en la lista de deseados.");
+            }
+
+            user.getDesiredMangas().add(manga);
+            userRepository.save(user);
+            return ResponseEntity.ok("Manga añadido a la lista de deseados.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("El manga especificado no fue encontrado.");
+        }
+    }
+
+    @Override
+    public List<MangaDto> getUserDesiredMangas(Long userId) {
+        UserEntity user = userRepository.findById(userId);
+        return mangaDtoMapper.fromMangaEntityListToMangaDtoList(user.getDesiredMangas());
     }
 
 

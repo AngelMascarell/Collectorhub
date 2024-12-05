@@ -60,7 +60,7 @@ public class UserEntity extends BaseEntity implements UserDetails {
     )
     private List<MangaEntity> mangas;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_desired_mangas",
             joinColumns = @JoinColumn(name = "usuario_id"),

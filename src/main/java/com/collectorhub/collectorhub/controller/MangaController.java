@@ -1,7 +1,9 @@
 package com.collectorhub.collectorhub.controller;
 
 import com.collectorhub.collectorhub.controller.request.MangaRequest;
+import com.collectorhub.collectorhub.controller.response.MangaListResponse;
 import com.collectorhub.collectorhub.controller.response.MangaResponse;
+import com.collectorhub.collectorhub.controller.response.MangaResponseList;
 import com.collectorhub.collectorhub.controller.response.ObtainMangasResponse;
 import com.collectorhub.collectorhub.database.entities.MangaEntity;
 import com.collectorhub.collectorhub.dto.MangaDexResponseDto;
@@ -107,6 +109,14 @@ public class MangaController {
         return ResponseEntity.ok(mangaCount);
     }
 
+    @GetMapping("/recent-30-days")
+    public ResponseEntity<ObtainMangasResponse> getRecentMangas() {
+        List<MangaDto> recentMangas = mangaService.findMangasReleasedInLast30Days();
+
+        ObtainMangasResponse mangaListResponse = mangaDtoMapper.fromMangaDtoListToObtainMangaResponse(recentMangas);
+        return ResponseEntity.ok(mangaListResponse);
+    }
+
 
     //TODO:MANGA DEX ENDPOINTS
 
@@ -123,6 +133,15 @@ public class MangaController {
     public ResponseEntity<MangaEntity> saveManga(@PathVariable("id") String mangaId) {
         MangaEntity savedManga = mangaDexService.saveManga(mangaId);
         return new ResponseEntity<>(savedManga, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/mangadex/get-mangas")
+    public List<MangaDexResponseDto> searchMangas(
+            @RequestParam(value = "limit", defaultValue = "10") int limit,
+            @RequestParam(value = "offset", defaultValue = "0") int offset,
+            @RequestParam(value = "title", required = false) String title) {
+
+        return mangaDexService.searchMangas(limit, offset, title);
     }
 
 

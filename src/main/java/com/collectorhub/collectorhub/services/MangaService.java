@@ -41,5 +41,7 @@ public interface MangaService {
 
     public List<MangaDto> getPersonalizedMangas(Long userId);
 
-    MangaEntity findMangaByTittle(String name);
+    public MangaEntity findMangaByTittle(String name);
+
+    public List<MangaDto> findMangasReleasedInLast30Days();
 }

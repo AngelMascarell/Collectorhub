@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -22,5 +23,8 @@ public class MangaDexResponseDto {
     private List<String> genres;
     private int chapters;
     private String imageUrl;
+
+    private String synopsis;
+    private LocalDate releaseDate;
 
 }

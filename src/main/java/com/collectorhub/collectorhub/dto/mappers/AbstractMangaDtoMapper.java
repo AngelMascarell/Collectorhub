@@ -26,18 +26,19 @@ public interface AbstractMangaDtoMapper {
         mangaEntity.setCompleted(model.isCompleted());
         mangaEntity.setImageUrl(model.getImageUrl());
 
+        mangaEntity.setSynopsis(model.getDescription());
+        mangaEntity.setReleaseDate(model.getReleaseDate());
+
         mangaEntity.setAuthor(generateRandomJapaneseName());
 
-        // Asignar géneros
         List<GenreEntity> genres = model.getGenres().stream()
-                .map(genreName -> genreRepository.findByName(genreName)) // Busca el género en la base de datos
-                .filter(Objects::nonNull) // Filtra los géneros nulos en caso de que no se encuentren
+                .map(genreName -> genreRepository.findByName(genreName))
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
 
-        // Aquí podrías ajustar si necesitas un solo género o una lista
-        // Por ejemplo, si solo necesitas el primer género:
+
         if (!genres.isEmpty()) {
-            mangaEntity.setGenre(genres.get(0)); // Asigna el primer género encontrado
+            mangaEntity.setGenre(genres.get(0));
         }
 
         return mangaEntity;

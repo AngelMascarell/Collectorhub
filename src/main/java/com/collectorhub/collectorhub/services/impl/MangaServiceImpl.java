@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.nio.ByteBuffer;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -180,38 +181,32 @@ public class MangaServiceImpl implements MangaService {
 
     @Override
     public List<MangaDto> getPersonalizedMangas(Long userId) {
-        // Obtén los mangas del usuario desde la entidad de usuario
         UserEntity user = userRepository.findById(userId);
-                //.orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
+        //.orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
 
-        List<MangaEntity> userCollection = user.getMangas(); // Asumiendo una relación Set<MangaEntity> mangas;
+        List<MangaEntity> userCollection = user.getMangas();
 
-        // Extraer los IDs de los mangas de la colección del usuario
         Set<Long> userCollectionIds = userCollection.stream()
                 .map(MangaEntity::getId)
                 .collect(Collectors.toSet());
 
-        // Agrupa los mangas por autor basados en los que ya tiene el usuario
         Map<String, Long> authorCount = userCollection.stream()
                 .collect(Collectors.groupingBy(MangaEntity::getAuthor, Collectors.counting()));
 
-        // Encuentra los autores más frecuentes
         List<String> topAuthors = authorCount.entrySet().stream()
                 .sorted((entry1, entry2) -> Long.compare(entry2.getValue(), entry1.getValue()))
                 .limit(2)
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
 
-        // Filtra los mangas que no están en la colección del usuario pero pertenecen a autores favoritos
         List<MangaEntity> filteredMangas = mangaRepository.findAll().stream()
-                .filter(manga -> topAuthors.contains(manga.getAuthor())) // Autores favoritos
-                .filter(manga -> !userCollectionIds.contains(manga.getId())) // Excluir mangas del usuario
+                .filter(manga -> topAuthors.contains(manga.getAuthor()))
+                .filter(manga -> !userCollectionIds.contains(manga.getId()))
                 .collect(Collectors.toList());
 
-        // Si la lista está vacía, muestra todos los mangas que no tenga el usuario
         if (filteredMangas.isEmpty()) {
             filteredMangas = mangaRepository.findAll().stream()
-                    .filter(manga -> !userCollectionIds.contains(manga.getId())) // Excluir mangas del usuario
+                    .filter(manga -> !userCollectionIds.contains(manga.getId()))
                     .collect(Collectors.toList());
         }
 
@@ -219,12 +214,31 @@ public class MangaServiceImpl implements MangaService {
     }
 
 
-
-
     @Override
     public MangaEntity findMangaByTittle(String name) {
         return mangaRepository.findByTitleIgnoreCase(name).orElse(null);
     }
+
+    @Override
+    public List<MangaDto> findMangasReleasedInLast30Days() {
+        LocalDate thirtyDaysAgo = LocalDate.now().minusDays(30);
+        List<MangaEntity> mangas = mangaRepository.findByReleaseDateAfter(thirtyDaysAgo);
+
+        return mangas.stream()
+                .map(manga -> new MangaDto(
+                        manga.getId(),
+                        manga.getTitle(),
+                        manga.getAuthor(),
+                        manga.getGenre().getId(),
+                        manga.getChapters(),
+                        manga.isCompleted(),
+                        manga.getImageUrl(),
+                        manga.getSynopsis(),
+                        manga.getReleaseDate()
+                ))
+                .collect(Collectors.toList());
+    }
+
 
     private List<Long> uuidToLong(UUID uuid) {
         if (uuid == null) {

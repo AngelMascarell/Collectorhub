@@ -60,6 +60,28 @@ public class UserController {
         return ResponseEntity.ok(mangaResponseList);
     }
 
+    @PostMapping("/add-desired-manga/{mangaId}")
+    public ResponseEntity<String> addDesiredMangaToUser(@PathVariable Long mangaId, @AuthenticationPrincipal UserEntity user) {
+        if (user == null) {
+            return ResponseEntity.status(401).body("User not authenticated");
+        }
+
+        return userService.addDesiredMangaToUser(user, mangaId);
+    }
+
+    @GetMapping("/desired-mangas")
+    public ResponseEntity<MangaResponseList> getUserDesiredMangas(@AuthenticationPrincipal UserEntity user) {
+        Long userId = user.getId();
+        List<MangaDto> userMangas = userService.getUserDesiredMangas(userId);
+
+        if (userMangas.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        MangaResponseList mangaResponseList = new MangaResponseList(mangaDtoMapper.fromMangaDtoListToMangaResponseList(userMangas));
+        return ResponseEntity.ok(mangaResponseList);
+    }
+
     @PostMapping("/new")
     public ResponseEntity<UserResponse> createUser(@Valid @RequestBody UserRequest userRequest) {
         UserResponse createdUser = userDtoMapper.fromUserDtoToUserResponse(userService.createUser(userDtoMapper.fromUserRequestToUserDto(userRequest)));
@@ -71,6 +93,14 @@ public class UserController {
     public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {
         UserResponse user = userDtoMapper.fromUserDtoToUserResponse(userService.findById(id));
         return ResponseEntity.ok(user);
+    }
+
+    @GetMapping("/get-authenticated-user")
+    public ResponseEntity<UserResponse> getAuthenticatedUser(@AuthenticationPrincipal UserEntity user) {
+        Long userId = user.getId();
+
+        UserResponse userResponse = userDtoMapper.fromUserDtoToUserResponse(userService.findById(userId));
+        return ResponseEntity.ok(userResponse);
     }
 
     @GetMapping("/getUserProfile")

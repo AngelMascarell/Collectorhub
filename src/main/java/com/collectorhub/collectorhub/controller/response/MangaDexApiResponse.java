@@ -18,7 +18,7 @@ public class MangaDexApiResponse {
 
     private String result;
     private String response;
-    private MangaData data;  // Renombrado a MangaData para mayor claridad
+    private MangaData data;
     private int limit;
     private int offset;
     private int total;
@@ -41,9 +41,9 @@ public class MangaDexApiResponse {
     @Data
     @Builder
     public static class MangaAttributes {
-        private Map<String, String> title;       // Cambiado a Map para la clave del idioma
+        private Map<String, String> title;
         private List<Map<String, String>> altTitles;
-        private Map<String, String> description; // Cambiado a Map
+        private Map<String, String> description;
         private boolean isLocked;
         private Map<String, String> links;
         private String originalLanguage;

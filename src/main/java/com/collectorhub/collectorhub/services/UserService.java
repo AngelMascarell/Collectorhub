@@ -6,12 +6,12 @@ import com.collectorhub.collectorhub.dto.MangaDto;
 import com.collectorhub.collectorhub.dto.UserDto;
 import org.springframework.http.ResponseEntity;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public interface UserService {
 
     public UserDto findByUsername(String username);
+
     public UserDto findById(long id);
 
     public UserDto findByEmail(String email);
@@ -30,5 +30,9 @@ public interface UserService {
 
     public ResponseEntity<String> addMangaToUser(UserEntity user, Long mangaId);
 
-    List<MangaDto> getUserMangas(Long userId);
+    public ResponseEntity<String> addDesiredMangaToUser(UserEntity user, Long mangaId);
+
+    public List<MangaDto> getUserMangas(Long userId);
+
+    public List<MangaDto> getUserDesiredMangas(Long userId);
 }
