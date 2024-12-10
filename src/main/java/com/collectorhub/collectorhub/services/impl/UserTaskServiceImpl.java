@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -37,28 +38,32 @@ public class UserTaskServiceImpl implements UserTaskService {
 
     @Override
     public void checkTasksCompletion(UserEntity user) {
-        List<UserTaskEntity> userTasks = user.getUserTasks();
+        List<UserTaskEntity> incompleteTasks = user.getUserTasks().stream()
+                .filter(task -> !task.isCompleted()).toList();
 
-        for (UserTaskEntity userTask : userTasks) {
+        for (UserTaskEntity userTask : incompleteTasks) {
             TaskEntity task = userTask.getTask();
-            String description = task.getDescription();
+            String title = task.getTitle();
 
-            // Aquí verificamos si se cumple la condición
-            if (description.equals("Tener más de 5 mangas en tu colección personal")) {
-                if (user.getMangas().size() > 5) {
-                    userTask.setCompleted(true); // Marca la tarea como completada
+            if (title.equals("Primer Tomo")) {
+                if (user.getMangas().size() >= 1) {
+                    userTask.setCompleted(true);
                 }
             }
 
-            // Aquí puedes agregar más condiciones para otras tareas
+            if (title.equals("Coleccionista en Proceso")) {
+                if (user.getMangas().size() >= 10) {
+                    userTask.setCompleted(true);
+                }
+            }
         }
     }
+
 
     @Override
     @Transactional
     public void updateTaskCompletion(UserEntity user) {
         checkTasksCompletion(user);
-        // Guarda los cambios en la base de datos
         userTaskRepository.saveAll(user.getUserTasks());
     }
 
@@ -69,7 +74,6 @@ public class UserTaskServiceImpl implements UserTaskService {
         if (userEntity != null) {
             List<UserTaskEntity> userTasks = userEntity.getUserTasks();
 
-            // Contar las tareas completadas
             int completedCount = 0;
             for (UserTaskEntity userTask : userTasks) {
                 if (userTask.isCompleted()) {

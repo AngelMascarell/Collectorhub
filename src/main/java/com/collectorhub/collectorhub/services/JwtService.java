@@ -10,4 +10,10 @@ public interface JwtService {
     String getUsernameFromToken(String token);
 
     boolean isTokenValid(String token, UserDetails userDetails);
+
+    void revokeToken(String token);
+
+    public boolean isTokenRevoked(String token);
+
+    public void cleanExpiredTokens(long expirationTimeInMillis);
 }

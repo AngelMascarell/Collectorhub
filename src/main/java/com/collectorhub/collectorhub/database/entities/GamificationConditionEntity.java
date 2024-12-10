@@ -24,7 +24,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class GamificationConditionEntity extends BaseEntity {
 
-    private String type; // Tipo de condición, ej. "TASK_COMPLETED"
-    private int threshold; // Número mínimo para cumplir la condición
+    private String type; // Tipo de condición "TASK_COMPLETED"
+    private int threshold;
 
 }

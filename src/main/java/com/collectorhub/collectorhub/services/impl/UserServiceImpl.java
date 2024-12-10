@@ -163,6 +163,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<String> addMangaToUser(UserEntity user, Long mangaId) {
         Hibernate.initialize(user.getMangas());
+        Hibernate.initialize(user.getDesiredMangas());
         Optional<MangaEntity> mangaOpt = Optional.ofNullable(mangaRepository.findById(mangaId));
 
         if (mangaOpt.isPresent()) {
@@ -176,14 +177,20 @@ public class UserServiceImpl implements UserService {
                         .body("El usuario ya tiene este manga en su colección.");
             }
 
+            if (user.getDesiredMangas().stream().anyMatch(m -> m.getId().equals(manga.getId()))) {
+                user.getDesiredMangas().removeIf(m -> m.getId().equals(manga.getId()));
+            }
+
             user.getMangas().add(manga);
             userRepository.save(user);
+
             return ResponseEntity.ok("Manga añadido a la colección del usuario.");
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("El manga especificado no fue encontrado.");
         }
     }
+
 
     @Override
     public List<MangaDto> getUserMangas(Long userId) {

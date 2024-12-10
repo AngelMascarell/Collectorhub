@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -38,19 +39,28 @@ public class TaskController {
     @Autowired
     private GamificationService gamificationService;
 
-    @PostMapping("/checkCompletion/{userId}")
-    public ResponseEntity<String> checkTaskCompletion(@PathVariable Long userId) {
+    @PostMapping("/checkCompletion")
+    public ResponseEntity<String> checkTaskCompletion(@AuthenticationPrincipal UserEntity user) {
+        Long userId = user.getId();
+
         Optional<UserEntity> optionalUser = Optional.ofNullable(userRepository.findById(userId));
 
         if (optionalUser.isPresent()) {
-            UserEntity user = optionalUser.get();
-            userTaskService.updateTaskCompletion(user);
-            gamificationService.checkGamificationsForUser(user);
-            return ResponseEntity.ok("Tareas completadas verificadas.");
+            UserEntity userFind = optionalUser.get();
+            userTaskService.updateTaskCompletion(userFind);
+
+            String awardedGamification = gamificationService.checkGamificationsForUser(userFind);
+
+            if (awardedGamification != null) {
+                return ResponseEntity.ok("Gamificación conseguida: " + awardedGamification);
+            } else {
+                return ResponseEntity.ok("No se ha conseguido ninguna nueva gamificación.");
+            }
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado.");
         }
     }
+
 
     @PostMapping("/new")
     public ResponseEntity<TaskResponse> createTask(@Valid @RequestBody TaskRequest request) {

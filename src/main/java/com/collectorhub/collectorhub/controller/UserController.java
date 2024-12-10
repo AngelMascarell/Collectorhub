@@ -3,6 +3,7 @@ package com.collectorhub.collectorhub.controller;
 import com.collectorhub.collectorhub.controller.request.UserFilterRequest;
 import com.collectorhub.collectorhub.controller.request.UserRequest;
 import com.collectorhub.collectorhub.controller.response.MangaResponseList;
+import com.collectorhub.collectorhub.controller.response.UpdateUserResponse;
 import com.collectorhub.collectorhub.controller.response.UserResponse;
 import com.collectorhub.collectorhub.controller.response.UserResponseList;
 import com.collectorhub.collectorhub.database.entities.UserEntity;
@@ -10,6 +11,7 @@ import com.collectorhub.collectorhub.dto.MangaDto;
 import com.collectorhub.collectorhub.dto.UserDto;
 import com.collectorhub.collectorhub.dto.mappers.AbstractMangaDtoMapper;
 import com.collectorhub.collectorhub.dto.mappers.AbstractUserDtoMapper;
+import com.collectorhub.collectorhub.services.JwtService;
 import com.collectorhub.collectorhub.services.UserService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +21,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -37,6 +41,9 @@ public class UserController {
 
     @Autowired
     private AbstractMangaDtoMapper mangaDtoMapper;
+
+    @Autowired
+    private JwtService jwtService;
 
     @PostMapping("/add-manga/{mangaId}")
     public ResponseEntity<String> addMangaToUser(@PathVariable Long mangaId, @AuthenticationPrincipal UserEntity user) {
@@ -148,6 +155,21 @@ public class UserController {
         UserResponse updatedUser = userDtoMapper.fromUserDtoToUserResponse(userService.updateUser(userDtoMapper.fromUserRequestToUserDto(userRequest), id));
         return ResponseEntity.ok(updatedUser);
     }
+
+    @PutMapping("/upd-auth-user")
+    public ResponseEntity<UpdateUserResponse> updateUser(@AuthenticationPrincipal UserEntity user, @RequestBody UserRequest userRequest) {
+        Long userId = user.getId();
+        UserDto updatedUser = (userService.updateUser(userDtoMapper.fromUserRequestToUserDto(userRequest), userId));
+
+        String newToken = jwtService.getToken(userDtoMapper.fromUserDtoToUserEntity(updatedUser));
+
+        UpdateUserResponse response = new UpdateUserResponse();
+        response.setUser(updatedUser);
+        response.setToken(newToken);
+
+        return ResponseEntity.ok(response);
+    }
+
 
     @PostMapping("/getUsersFilter")
     public ResponseEntity<List<UserResponse>> getUsersFilter(@RequestBody UserFilterRequest filter) {

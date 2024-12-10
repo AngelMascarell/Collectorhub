@@ -27,7 +27,7 @@ public interface GamificationService {
     public void deleteGamification(UUID id);
 
 
-    public void checkGamificationsForUser(UserEntity user);
+    public String checkGamificationsForUser(UserEntity user);
 
 
 }

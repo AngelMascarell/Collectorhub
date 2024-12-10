@@ -14,6 +14,7 @@ import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 @Service
@@ -35,6 +36,24 @@ public class JwtServiceImpl implements JwtService {
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = getUsernameFromToken(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    }
+
+    private static final ConcurrentHashMap<String, Long> revokedTokens = new ConcurrentHashMap<>();
+
+    @Override
+    public void revokeToken(String token) {
+        revokedTokens.put(token, System.currentTimeMillis());
+    }
+
+    @Override
+    public boolean isTokenRevoked(String token) {
+        return revokedTokens.containsKey(token);
+    }
+
+    @Override
+    public void cleanExpiredTokens(long expirationTimeInMillis) {
+        long currentTime = System.currentTimeMillis();
+        revokedTokens.entrySet().removeIf(entry -> currentTime - entry.getValue() > expirationTimeInMillis);
     }
 
     private Claims getAllClaims(String token) {
