@@ -45,18 +45,14 @@ public class MangaListServiceImpl implements MangaListService {
         nuevaLista.setName(mangaListDto.getName());
         nuevaLista.setDescription(mangaListDto.getDescription());
 
-        // Obtén los IDs de manga en formato Long
         List<Long> mangaIds = mangaListDto.getMangas().stream()
-                .map(MangaDto::getId) // Asumiendo que getId devuelve Long
+                .map(MangaDto::getId)
                 .collect(Collectors.toList());
 
-        // Buscar las entidades Manga utilizando los Longs
-        List<MangaEntity> mangas = mangaRepository.findAllByIdIn(mangaIds); // Asegúrate de tener un método que acepte una lista de Longs
+        List<MangaEntity> mangas = mangaRepository.findAllByIdIn(mangaIds);
 
-        // Establecer las mangas en la nueva lista
         nuevaLista.setMangas(mangas);
 
-        // Guardar la nueva lista en la base de datos y convertirla a DTO
         return mangaListDtoMapper.fromMangaListEntityToMangaListDto(mangaListRepository.save(nuevaLista));
     }
 
@@ -72,27 +68,21 @@ public class MangaListServiceImpl implements MangaListService {
         dto.setName(request.getListName());
         dto.setDescription(request.getDescription());
 
-        // Ahora buscar mangas por UUID
         List<MangaDto> mangaDtos = mangaService.findMangasByIds(request.getMangaIds());
-        dto.setMangas(mangaDtos); // Asignar la lista de MangaDto
+        dto.setMangas(mangaDtos);
 
         return dto;
     }
 
     public UUID longToUuid(Long id) {
         if (id == null) {
-            return null; // Manejo de nulos
+            return null;
         }
 
-        // Crear un ByteBuffer de 16 bytes para almacenar el UUID
         ByteBuffer byteBuffer = ByteBuffer.allocate(16);
-        byteBuffer.putLong(id); // El primer long representa el most-significant bits
-        byteBuffer.putLong(0);   // El segundo long representa el least-significant bits como cero o un valor predeterminado
-
-        // Crear un UUID a partir del buffer
+        byteBuffer.putLong(id);
+        byteBuffer.putLong(0);
         return new UUID(byteBuffer.getLong(0), byteBuffer.getLong(8));
     }
-
-
 }
 

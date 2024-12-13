@@ -17,6 +17,7 @@ public interface UserService {
     public UserDto findByEmail(String email);
 
     public UserDto createUser(UserDto userDto);
+    public UserDto createAdminUser(UserDto userDto);
 
     public List<UserDto> getAllUsers();
 

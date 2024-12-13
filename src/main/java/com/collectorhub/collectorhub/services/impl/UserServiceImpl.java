@@ -2,17 +2,21 @@ package com.collectorhub.collectorhub.services.impl;
 
 import com.collectorhub.collectorhub.controller.request.UserFilterRequest;
 import com.collectorhub.collectorhub.database.entities.MangaEntity;
+import com.collectorhub.collectorhub.database.entities.RoleEntity;
 import com.collectorhub.collectorhub.database.entities.UserEntity;
 import com.collectorhub.collectorhub.database.repositories.MangaRepository;
+import com.collectorhub.collectorhub.database.repositories.RoleRepository;
 import com.collectorhub.collectorhub.database.repositories.UserRepository;
 import com.collectorhub.collectorhub.dto.MangaDto;
 import com.collectorhub.collectorhub.dto.UserDto;
 import com.collectorhub.collectorhub.dto.mappers.AbstractMangaDtoMapper;
+import com.collectorhub.collectorhub.dto.mappers.AbstractRoleDtoMapper;
 import com.collectorhub.collectorhub.dto.mappers.AbstractUserDtoMapper;
 import com.collectorhub.collectorhub.services.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.users.AbstractRole;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,9 +36,14 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
+    private RoleRepository roleRepository;
+    @Autowired
     private MangaRepository mangaRepository;
     @Autowired
     private AbstractUserDtoMapper userDtoMapper;
+
+    @Autowired
+    private AbstractRoleDtoMapper roleDtoMapper;
 
     @Autowired
     private AbstractMangaDtoMapper mangaDtoMapper;
@@ -70,6 +79,33 @@ public class UserServiceImpl implements UserService {
 
         String encodedPassword = passwordEncoder.encode(userDto.getPassword());
         userDto.setPassword(encodedPassword);
+        RoleEntity roleEntity = roleRepository.findByName("USER");
+
+        userDto.setRole(roleDtoMapper.fromRoleEntityToRoleDto(roleEntity));
+
+        UserEntity userEntity = userDtoMapper.fromUserDtoToUserEntity(userDto);
+
+        UserEntity savedUserEntity = userRepository.save(userEntity);
+
+        return userDtoMapper.fromUserEntityToUserDto(savedUserEntity);
+    }
+
+    @Override
+    public UserDto createAdminUser(UserDto userDto) {
+        if (userRepository.findByUsername(userDto.getUsername()) != null) {
+            throw new IllegalArgumentException("El nombre de usuario ya está en uso.");
+        }
+
+        if (userRepository.findByEmail(userDto.getEmail()) != null) {
+            throw new IllegalArgumentException("El correo electrónico ya está en uso.");
+        }
+
+        String encodedPassword = passwordEncoder.encode(userDto.getPassword());
+        userDto.setPassword(encodedPassword);
+
+        RoleEntity roleEntity = roleRepository.findByName("ADMIN");
+
+        userDto.setRole(roleDtoMapper.fromRoleEntityToRoleDto(roleEntity));
 
         UserEntity userEntity = userDtoMapper.fromUserDtoToUserEntity(userDto);
 
@@ -116,16 +152,16 @@ public class UserServiceImpl implements UserService {
             existingUser.setEmail(userDto.getEmail());
         }
 
+        /*
         if (userDto.getPassword() != null) {
             existingUser.setPassword(passwordEncoder.encode(userDto.getPassword()));
         }
+         */
 
 
         if (userDto.getBirthdate() != null) {
             existingUser.setBirthdate(userDto.getBirthdate());
         }
-
-        // No sobreescribimos otros campos como "premium" o "fecha de registro" ya que no se modifican
 
         UserEntity updatedUser = userRepository.save(existingUser);
 

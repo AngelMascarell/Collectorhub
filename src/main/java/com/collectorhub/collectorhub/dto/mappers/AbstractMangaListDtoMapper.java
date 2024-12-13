@@ -37,7 +37,7 @@ public interface AbstractMangaListDtoMapper {
                 .id(mangaEntity.getId())
                 .title(mangaEntity.getTitle())
                 .author(mangaEntity.getAuthor())
-                .genreId(mangaEntity.getGenre() != null ? mangaEntity.getGenre().getId() : null) // Mapea el género
+                .genreId(mangaEntity.getGenre() != null ? mangaEntity.getGenre().getId() : null)
                 .chapters(mangaEntity.getChapters())
                 .completed(mangaEntity.isCompleted())
                 .build();

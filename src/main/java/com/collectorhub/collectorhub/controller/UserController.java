@@ -95,6 +95,12 @@ public class UserController {
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 
+    @PostMapping("/newAdmin")
+    public ResponseEntity<UserResponse> createAdminUser(@Valid @RequestBody UserRequest userRequest) {
+        UserResponse createdUser = userDtoMapper.fromUserDtoToUserResponse(userService.createAdminUser(userDtoMapper.fromUserRequestToUserDto(userRequest)));
+        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+    }
+
 
     @GetMapping("/getOne/{id}")
     public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {

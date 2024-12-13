@@ -32,9 +32,8 @@ public interface AbstractMangaDtoMapper {
         mangaEntity.setAuthor(generateRandomJapaneseName());
 
         List<GenreEntity> genres = model.getGenres().stream()
-                .map(genreName -> genreRepository.findByName(genreName))
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+                .map(genreRepository::findByName)
+                .filter(Objects::nonNull).toList();
 
 
         if (!genres.isEmpty()) {
