@@ -3,6 +3,7 @@ package com.collectorhub.collectorhub.controller;
 import com.collectorhub.collectorhub.controller.request.GamificationRequest;
 import com.collectorhub.collectorhub.controller.response.GamificationListResponse;
 import com.collectorhub.collectorhub.controller.response.GamificationResponse;
+import com.collectorhub.collectorhub.controller.response.MangaDexResponse;
 import com.collectorhub.collectorhub.dto.GamificationDto;
 import com.collectorhub.collectorhub.dto.mappers.AbstractGamificationDtoMapper;
 import com.collectorhub.collectorhub.services.GamificationService;
@@ -13,10 +14,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -34,6 +38,8 @@ public class GamificationController {
 
     @Autowired
     private AbstractGamificationDtoMapper gamificationDtoMapper;
+
+
 
     @PostMapping("/upload-image")
     public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) throws IOException {
@@ -63,6 +69,47 @@ public class GamificationController {
                 .contentType(MediaType.parseMediaType(contentType))
                 .body(image);
     }
+
+
+    @GetMapping("/covers/{id}")
+    public ResponseEntity<byte[]> getCover(@PathVariable String id) {
+        try {
+            String imageUrl = "https://api.mangadex.org/cover/" + id;
+            MangaDexResponse response = new RestTemplate().getForObject(imageUrl, MangaDexResponse.class);
+
+            if (response == null || response.getData() == null || response.getData().getAttributes() == null) {
+                return ResponseEntity.notFound().build();
+            }
+
+            String fileName = response.getData().getAttributes().getFileName();
+            String localImagePath = uploadDir + fileName;
+
+            byte[] image = new RestTemplate().getForObject(imageUrl, byte[].class);
+
+            if (image == null) {
+                return ResponseEntity.notFound().build();
+            }
+
+            Files.write(Paths.get(localImagePath), image);
+
+            try {
+                Files.readAllBytes(Paths.get(localImagePath));
+            } catch (IOException e) {
+                e.printStackTrace();
+                return ResponseEntity.status(500).body(null);
+            }
+
+            String contentType = Files.probeContentType(Paths.get(localImagePath));
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .body(image);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(null);
+        }
+    }
+
 
     @GetMapping("/getAll")
     public ResponseEntity<GamificationListResponse> getAllGamification() {

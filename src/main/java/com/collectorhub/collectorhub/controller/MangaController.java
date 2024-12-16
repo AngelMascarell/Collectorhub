@@ -1,9 +1,7 @@
 package com.collectorhub.collectorhub.controller;
 
 import com.collectorhub.collectorhub.controller.request.MangaRequest;
-import com.collectorhub.collectorhub.controller.response.MangaListResponse;
 import com.collectorhub.collectorhub.controller.response.MangaResponse;
-import com.collectorhub.collectorhub.controller.response.MangaResponseList;
 import com.collectorhub.collectorhub.controller.response.ObtainMangasResponse;
 import com.collectorhub.collectorhub.database.entities.MangaEntity;
 import com.collectorhub.collectorhub.dto.MangaDexResponseDto;
@@ -132,6 +130,21 @@ public class MangaController {
     @PostMapping("/mangadex/{id}/save")
     public ResponseEntity<MangaEntity> saveManga(@PathVariable("id") String mangaId) {
         MangaEntity savedManga = mangaDexService.saveManga(mangaId);
+        return new ResponseEntity<>(savedManga, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/mangadex")
+    public ResponseEntity<MangaDexResponseDto> getRandomManga() {
+        MangaDexResponseDto manga = mangaDexService.getRandomManga();
+        if (manga == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(manga, HttpStatus.OK);
+    }
+
+    @PostMapping("/mangadex/saveRandom")
+    public ResponseEntity<MangaEntity> saveRandomManga() {
+        MangaEntity savedManga = mangaDexService.saveRandomManga();
         return new ResponseEntity<>(savedManga, HttpStatus.CREATED);
     }
 

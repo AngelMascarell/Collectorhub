@@ -35,10 +35,13 @@ public interface AbstractMangaDtoMapper {
                 .map(genreRepository::findByName)
                 .filter(Objects::nonNull).toList();
 
-
         if (!genres.isEmpty()) {
             mangaEntity.setGenre(genres.get(0));
+        } else {
+            mangaEntity.setGenre(genreRepository.findByName("Oneshot"));
         }
+
+
 
         return mangaEntity;
     }

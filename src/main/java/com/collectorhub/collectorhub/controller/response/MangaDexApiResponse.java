@@ -19,9 +19,6 @@ public class MangaDexApiResponse {
     private String result;
     private String response;
     private MangaData data;
-    private int limit;
-    private int offset;
-    private int total;
 
     @Validated
     @NoArgsConstructor
@@ -72,7 +69,6 @@ public class MangaDexApiResponse {
         private String id;
         private String type;
         private TagAttributes attributes;
-        private List<Relationship> relationships;
     }
 
     @Validated
@@ -82,7 +78,7 @@ public class MangaDexApiResponse {
     @Builder
     public static class TagAttributes {
         private Map<String, String> name;
-        private Map<String, String> description;
+        private List<String> description; // Cambiar a List<String> para coincidir con JSON
         private String group;
         private int version;
     }
@@ -99,3 +95,4 @@ public class MangaDexApiResponse {
         private Object attributes;
     }
 }
+

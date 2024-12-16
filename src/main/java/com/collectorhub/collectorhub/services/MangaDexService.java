@@ -11,4 +11,8 @@ public interface MangaDexService {
     public MangaEntity saveManga(String mangaId);
 
     public List<MangaDexResponseDto> searchMangas(int limit, int offset, String title);
+
+    public MangaDexResponseDto getRandomManga();
+
+    public MangaEntity saveRandomManga();
 }

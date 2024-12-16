@@ -120,8 +120,14 @@ public class MangaServiceImpl implements MangaService {
 
     @Override
     public List<MangaDto> getAllMangas() {
-        return mangaDtoMapper.fromMangaEntityListToMangaDtoList(mangaRepository.findAll());
+        List<MangaEntity> mangas = mangaRepository.findAll();
+        List<MangaEntity> filteredMangas = mangas.stream()
+                .filter(manga -> !manga.getImageUrl().startsWith("https:"))
+                .collect(Collectors.toList());
+
+        return mangaDtoMapper.fromMangaEntityListToMangaDtoList(filteredMangas);
     }
+
 
     @Override
     public MangaDto updateManga(MangaDto mangaDto, UUID id) {
@@ -165,24 +171,33 @@ public class MangaServiceImpl implements MangaService {
 
     @Override
     public List<MangaDto> getCompletedMangas() {
-        return mangaRepository.findByCompletedTrue()
-                .stream()
+        List<MangaEntity> completedMangas = mangaRepository.findByCompletedTrue();
+        List<MangaEntity> filteredMangas = completedMangas.stream()
+                .filter(manga -> !manga.getImageUrl().startsWith("https:"))
+                .collect(Collectors.toList());
+
+        return filteredMangas.stream()
                 .map(mangaDtoMapper::fromMangaEntityToMangaDto)
                 .collect(Collectors.toList());
     }
 
+
     @Override
     public List<MangaDto> getUnder100Mangas() {
-        return mangaRepository.findByChaptersLessThanEqual(100)
-                .stream()
+        List<MangaEntity> under100Mangas = mangaRepository.findByChaptersLessThanEqual(100);
+        List<MangaEntity> filteredMangas = under100Mangas.stream()
+                .filter(manga -> !manga.getImageUrl().startsWith("https:"))
+                .collect(Collectors.toList());
+
+        return filteredMangas.stream()
                 .map(mangaDtoMapper::fromMangaEntityToMangaDto)
                 .collect(Collectors.toList());
     }
+
 
     @Override
     public List<MangaDto> getPersonalizedMangas(Long userId) {
         UserEntity user = userRepository.findById(userId);
-        //.orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
 
         List<MangaEntity> userCollection = user.getMangas();
 
@@ -202,16 +217,19 @@ public class MangaServiceImpl implements MangaService {
         List<MangaEntity> filteredMangas = mangaRepository.findAll().stream()
                 .filter(manga -> topAuthors.contains(manga.getAuthor()))
                 .filter(manga -> !userCollectionIds.contains(manga.getId()))
+                .filter(manga -> !manga.getImageUrl().startsWith("https:"))
                 .collect(Collectors.toList());
 
         if (filteredMangas.isEmpty()) {
             filteredMangas = mangaRepository.findAll().stream()
                     .filter(manga -> !userCollectionIds.contains(manga.getId()))
+                    .filter(manga -> !manga.getImageUrl().startsWith("https:"))
                     .collect(Collectors.toList());
         }
 
         return mangaDtoMapper.fromMangaEntityListToMangaDtoList(filteredMangas);
     }
+
 
 
     @Override
@@ -224,7 +242,11 @@ public class MangaServiceImpl implements MangaService {
         LocalDate thirtyDaysAgo = LocalDate.now().minusDays(30);
         List<MangaEntity> mangas = mangaRepository.findByReleaseDateAfter(thirtyDaysAgo);
 
-        return mangas.stream()
+        List<MangaEntity> filteredMangas = mangas.stream()
+                .filter(manga -> !manga.getImageUrl().startsWith("https:"))
+                .collect(Collectors.toList());
+
+        return filteredMangas.stream()
                 .map(manga -> new MangaDto(
                         manga.getId(),
                         manga.getTitle(),
@@ -238,6 +260,7 @@ public class MangaServiceImpl implements MangaService {
                 ))
                 .collect(Collectors.toList());
     }
+
 
 
     private List<Long> uuidToLong(UUID uuid) {
